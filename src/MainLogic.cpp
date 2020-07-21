@@ -63,7 +63,10 @@ int main()
   float points[] = {
     0.5f, -0.5f,  0.0f,
    -0.5f, -0.5f,  0.0f,
-    0.0f,  0.5f,  0.0f
+    0.5f,  0.5f,  0.0f,
+    0.5f, -0.5f,  0.0f,
+    0.5f,  0.5f,  0.0f,
+    1.0f,  1.0f,  0.0f
   };
   okek::triangle mytri = okek::triangle(points);
   GLuint vbo = 0;
@@ -98,7 +101,7 @@ int main()
     glBindVertexArray(vao);
 
     // draw points 0-3 from the currently bound VAO with current in-use shader
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
 
     // update other events like input handling 
     glfwPollEvents();

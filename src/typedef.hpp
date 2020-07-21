@@ -1,6 +1,6 @@
 namespace okek
 {
-    struct CVec3
+    struct Cvec3
     {
         float dir[3];
     };
@@ -10,6 +10,22 @@ namespace okek
         float dir[9];
     };
 
+
+    struct Cmesh_points
+    {
+        int bytesize;
+
+        //must be a multiple of 3qwords
+        int offset[];
+    };
+
+    struct Cmesh
+    {
+        Cmesh_points* points;
+        int offsets[];
+        
+    };
+
     class vec3
     {
     public:
@@ -17,9 +33,9 @@ namespace okek
 
         //be aware that the size is not checked!
         vec3(float*);
-        CVec3 get();
-    private:
-        CVec3 vec;
+        Cvec3 get();
+    protected:
+        Cvec3 vec;
 
     };
 
@@ -30,12 +46,30 @@ namespace okek
 
         //be aware that the size is not checked!
         triangle(float*);
-
+        
         Ctriangle get();
         float* getp();
 
 
-    private:
+    protected:
         Ctriangle tri;
+    };
+
+
+
+    class mesh
+    {
+    public:
+        mesh() = default;
+
+        //move costructor
+        mesh(Cmesh*);
+
+        void SetmeshP(Cmesh*);
+        //retreves meshpointer
+        Cmesh* getmeshP();
+
+    protected:
+        Cmesh* cmesh;
     };
 };

@@ -1,3 +1,6 @@
+
+#credit to moros1138#4147 (discord name)
+
 PROJECT     :=  WallPaperLogic
 
 RELEASE		:= -O3
@@ -15,8 +18,11 @@ CXX			:= g++
 
 BIN			:= bin
 SRC			:= src
-INC			:= /usr/include
+#----------------------------------------->
+#"soon" going to move to the project folders
+INC			:= /usr/include 
 LIB			:= /usr/lib
+#----------------------------------------->
 OBJ     	:= obj
 RES			:= res
 
