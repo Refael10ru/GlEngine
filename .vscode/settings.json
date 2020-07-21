@@ -1,0 +1,8 @@
+{
+    "cmake.sourceDirectory": "${workspaceFolder}/ogl-master",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "files.associations": {
+        "iostream": "cpp"
+    },
+    "C_Cpp.default.compilerPath": "/home/okek/.vscode/extensions/bartmanabyss.amiga-debug-1.0.0\\bin\\opt\\bin\\m68k-amiga-elf-gcc.exe"
+}

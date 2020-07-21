@@ -1,0 +1,25 @@
+{
+    "env": {
+      "myDefaultIncludePath": ["${workspaceFolder}", "/usr/include"],
+      "myCompilerPath": "/usr/local/bin/gcc-7"
+    },
+    "configurations": [
+      {
+        "name": "Linux",
+        "intelliSenseMode": "clang-x64",
+        "includePath": ["${myDefaultIncludePath}", "${workspaceFolder}/include/"],
+        "defines": ["FOO", "BAR=100"],
+        "forcedInclude": [""],
+        "compilerPath": "/usr/bin/gcc",
+        "cStandard": "c11",
+        "cppStandard": "c++17",
+        "compileCommands": "${workspaceFolder}/.vscode/commands.sh",
+        "browse": {
+          "path": ["${workspaceFolder}"],
+          "limitSymbolsToIncludedHeaders": true,
+          "databaseFilename": ""
+        }
+      }
+    ],
+    "version": 4
+  }
