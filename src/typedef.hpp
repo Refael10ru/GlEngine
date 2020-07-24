@@ -5,14 +5,25 @@ namespace okek
         float dir[3];
     };
 
-    struct Cvec6
+    struct TextureCord
     {
-        float dir[6];
+        float Q, U;
+    };
+    struct Color
+    {
+        float R, G, B;
+    };    
+
+    struct ColoredCpoint
+    {
+        Cvec3 position;
+        Color color;
     };
 
-    struct Cvec5
+    struct TexturedCPoint
     {
-        float dir[5];
+        Cvec3 position;
+        TextureCord cord;
     };
 
     struct Ctriangle
@@ -35,14 +46,14 @@ namespace okek
         //true if on heap
         bool heap;
         int sizeqwords;
-        Cvec6 points[];
+        ColoredCpoint points[];
     };
     struct TexturedCPoints
     {
         //true if on heap
         bool heap;
         int sizeqwords;
-        Cvec5 points[];
+        TexturedCPoint points[];
     };
 
 
