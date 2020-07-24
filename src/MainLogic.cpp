@@ -1,6 +1,8 @@
+#include <stdio.h>
 #include <GL/glew.h> // include GLEW and new version of GL on Windows
 #include <GLFW/glfw3.h> // GLFW helper library
-#include <stdio.h>
+#include <iostream>
+#include <cmath>
 #include "shaders.hpp"
 #include "typedef.hpp"
 
@@ -28,7 +30,6 @@ int main()
   glfwMakeContextCurrent(window);
 
 
-
   // start GLEW extension handler
   glewExperimental = GL_TRUE;
   if (glewInit() != GLEW_OK) {
@@ -37,8 +38,6 @@ int main()
     glfwTerminate();
     return -1;
   }
-
-
 
 
   // get version info
@@ -54,60 +53,108 @@ int main()
 
 
 
-  // Dark blue background
-  glClearColor(0.7f, 0.0f, 0.0f, 0.7f);
-  glEnable(GL_DEPTH_TEST); // enable depth-testing
-  glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"
 
-
-  float points[] = {
+  float triangle1[] = {
     0.5f, -0.5f,  0.0f,
    -0.5f, -0.5f,  0.0f,
     0.5f,  0.5f,  0.0f,
-    0.5f, -0.5f,  0.0f,
-    0.5f,  0.5f,  0.0f,
-    1.0f,  1.0f,  0.0f
   };
-  okek::triangle mytri = okek::triangle(points);
-  GLuint vbo = 0;
-  glGenBuffers(1, &vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), mytri.getp(), GL_STATIC_DRAW);
-  GLuint vao = 0;
-  glGenVertexArrays(1, &vao);
-  glBindVertexArray(vao);
-  glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-    
+float vertices[] = {
+     0.5f,  0.5f, 0.0f,  // top right
+     0.5f, -0.5f, 0.0f,  // bottom right
+    -0.5f, -0.5f, 0.0f,  // bottom left
+    -0.5f,  0.5f, 0.0f   // top left 
+};
+unsigned int indices[] = {  // note that we start from 0!
+    0, 1, 3,   // first triangle
+    1, 2, 3    // second triangle
+}; 
 
+
+  int  success;
+  char infoLog[512];
   GLuint vs = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vs, 1, &vertex_shader, NULL);
   glCompileShader(vs);
+  glGetShaderiv(vs, GL_COMPILE_STATUS, &success);
+  if(!success)
+  {
+    glGetShaderInfoLog(vs, 512, NULL, infoLog);
+    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+  }
+
   GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
   glShaderSource(fs, 1, &fragment_shader, NULL);
   glCompileShader(fs);
+  if(!success)
+  {
+    glGetShaderInfoLog(vs, 512, NULL, infoLog);
+    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+  }
 
-  GLuint shader_programme = glCreateProgram();
-  glAttachShader(shader_programme, fs);
-  glAttachShader(shader_programme, vs);
-  glLinkProgram(shader_programme);
+  GLuint shaderProgram = glCreateProgram();
+  glAttachShader(shaderProgram, fs);
+  glAttachShader(shaderProgram, vs);
+  glLinkProgram(shaderProgram);
+  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+  if(!success) {
+    glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+    std::cout << "Error has acured!";
+  }
   
+  glDeleteShader(vs);
+  glDeleteShader(fs);  
+  
+  //------------------------------------->
+  // ..:: Initialization code ::..
+  // 1. bind Vertex Array Object
+  GLuint VAO = 0;
+  glGenVertexArrays(1, &VAO);
+  glBindVertexArray(VAO);
+  // 2. copy our vertices array in a vertex buffer for OpenGL to use
+  unsigned int VBO;
+  glGenBuffers(1, &VBO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  // 3. copy our index array in a element buffer for OpenGL to use
+  GLuint EBO;
+  glGenBuffers(1, &EBO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+  // 4. then set the vertex attributes pointers
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(0); 
+
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+
   while(!glfwWindowShouldClose(window)) 
   {
-    // wipe the drawing surface clear
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glUseProgram(shader_programme);
-    glBindVertexArray(vao);
 
-    // draw points 0-3 from the currently bound VAO with current in-use shader
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
+    // render
+    // clear the colorbuffer
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
 
-    // update other events like input handling 
-    glfwPollEvents();
+    // be sure to activate the shader
+    glUseProgram(shaderProgram);
+  
+    // update the uniform color
+    float timeValue = glfwGetTime();
+    float redValue = sin(timeValue) / 2.0f + 0.5f;
+    float greenValue = sin(timeValue+1) / 2.0f + 0.5f;
+    float blueValue = sin(timeValue+2) / 2.0f + 0.5f;
 
-    // put the stuff we've been drawing onto the display
+    int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+    glUniform4f(vertexColorLocation, redValue, greenValue, blueValue, 1.0f);
+
+    // now render the triangle
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+  
+    // swap buffers and poll IO events
     glfwSwapBuffers(window);
+    glfwPollEvents();
 
   }
 

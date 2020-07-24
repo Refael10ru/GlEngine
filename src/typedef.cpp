@@ -22,9 +22,16 @@ namespace okek
 
 
 
-    mesh::mesh(Cmesh* Target) { this->cmesh = Target; }
-    void mesh::SetmeshP(Cmesh* Target) { this->cmesh = Target; }
-    Cmesh* mesh::getmeshP() { return cmesh; }
+
+
+    TexturedMesh::TexturedMesh(TexturedMesh* Target)
+    {
+        this->points = Target->points;
+        this->indices = Target->indices;
+    }
+    void TexturedMesh::SetIndicesP(Cmesh_indices* Target) { this->indices = Target; }
+    void TexturedMesh::SetPointsP(TexturedCPoints* Target) { this->points = Target; }
+    TexturedCPoints* TexturedMesh::getPointsP() { return this->points; }
     
 
 };
