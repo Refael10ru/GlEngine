@@ -14,12 +14,6 @@ namespace okek
         float R, G, B;
     };    
 
-    struct ColoredCpoint
-    {
-        Cvec3 position;
-        Color color;
-    };
-
     struct TexturedCPoint
     {
         Cvec3 position;
@@ -41,13 +35,6 @@ namespace okek
         Cvec3 points[];
     };
 
-    struct ColoredCPoints
-    {
-        //true if on heap
-        bool heap;
-        int sizeqwords;
-        ColoredCpoint points[];
-    };
     struct TexturedCPoints
     {
         //true if on heap
@@ -56,15 +43,19 @@ namespace okek
         TexturedCPoint points[];
     };
 
+    struct CtriangleOffsets
+    {
+        int offset[3];
+    };
 
     struct Cmesh_indices 
     {
         //true if on heap
         bool heap;
         //represents how much triangles offsets groups together
-        int size3qwords;
+        unsigned long int OffsetsBytes;
         //instructions for how to group points into triangles
-        int offsets[];   
+        CtriangleOffsets offsets[];   
     };
 
     class vec3

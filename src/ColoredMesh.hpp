@@ -3,6 +3,20 @@
 namespace okek
 {
 
+    struct ColoredCPoint
+    {
+        Cvec3 position;
+        Color color;
+    };
+
+    struct ColoredCPoints
+    {
+        //true if on heap
+        bool heap;
+        unsigned long int sizeColoredCPointsBytes;
+        ColoredCPoint Cpoints[];
+    };
+
     class ColoredMesh
     {
     public:
@@ -17,8 +31,7 @@ namespace okek
         //sizeVertices = sum of points
         //sizeIndices = sum of triangles
         ColoredMesh(float vertices[],int sizeVertices,
-        unsigned int indices[], int sizeIndices,
-        bool heap);
+        unsigned int indices[], int sizeIndices);
 
         ~ColoredMesh();
 

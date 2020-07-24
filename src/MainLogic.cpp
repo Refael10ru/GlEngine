@@ -3,8 +3,8 @@
 #include <GLFW/glfw3.h> // GLFW helper library
 #include <iostream>
 #include <cmath>
+#include "ColoredMesh.hpp"
 #include "shaders.hpp"
-#include "typedef.hpp"
 
 
 int main() 
@@ -54,21 +54,24 @@ int main()
 
 
 
-  float triangle1[] = {
-    0.5f, -0.5f,  0.0f,
-   -0.5f, -0.5f,  0.0f,
-    0.5f,  0.5f,  0.0f,
-  };
-float vertices[] = {
+  float ColoredVertices[] = {
+    // positions         // colors
+     0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
+    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
+     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+  };    
+  float vertices[] = {
      0.5f,  0.5f, 0.0f,  // top right
      0.5f, -0.5f, 0.0f,  // bottom right
     -0.5f, -0.5f, 0.0f,  // bottom left
     -0.5f,  0.5f, 0.0f   // top left 
-};
-unsigned int indices[] = {  // note that we start from 0!
+  };
+  unsigned int indices[] = {  // note that we start from 0!
     0, 1, 3,   // first triangle
     1, 2, 3    // second triangle
-}; 
+  }; 
+  
+  okek::ColoredMesh mesh(vertices ,sizeof(vertices) ,indices, sizeof(indices));
 
 
   int  success;
