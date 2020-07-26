@@ -40,8 +40,10 @@ namespace okek
         void SetPointsVector(std::vector<ColoredCPoint> Target);
         //retreves pointer to "meshpoints"
         ColoredCPoint* GetPointsP();
+        CtriangleOffsets* GetIndicesP();
 
         unsigned long int GetPointsSize();
+        unsigned long int GetIndicesSize();
 
         void SetUpReader();
         const char* reader = 

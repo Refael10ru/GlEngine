@@ -58,8 +58,8 @@ int main()
     // positions         // colors
      0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
     -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   // top 
-    -0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f
+     0.5f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   // top 
+    -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 1.0f
   };    
   float vertices[] = {
      0.5f,  0.5f, 0.0f,  // top right
@@ -68,11 +68,11 @@ int main()
     -0.5f,  0.5f, 0.0f   // top left 
   };
   unsigned int indices[] = {  // note that we start from 0!
-    0, 1, 3,   // first triangle
+    0, 1, 2,   // first triangle
     1, 2, 3    // second triangle
   }; 
   
-  okek::ColoredMesh mesh(vertices ,3 ,indices, 2);
+  okek::ColoredMesh mesh(ColoredVertices ,4 ,indices, 2);
 
 
   int  success;
@@ -90,6 +90,7 @@ int main()
   GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
   glShaderSource(fs, 1, &fragment_shader, NULL);
   glCompileShader(fs);
+  glGetShaderiv(fs, GL_COMPILE_STATUS, &success);
   if(!success)
   {
     glGetShaderInfoLog(vs, 512, NULL, infoLog);
@@ -116,18 +117,23 @@ int main()
   glGenVertexArrays(1, &VAO);
   glBindVertexArray(VAO);
   // 2. copy our vertices array in a vertex buffer for OpenGL to use
-  unsigned int VBO;
+  GLuint VBO;
   glGenBuffers(1, &VBO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, mesh.GetPointsSize(), mesh.GetPointsP(), GL_STATIC_DRAW);
+
+  // position attribute
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(okek::ColoredCPoint), (void*)0);
+  glEnableVertexAttribArray(0);
+  // color attribute
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(okek::ColoredCPoint), (void*)(3* sizeof(float)));
+  glEnableVertexAttribArray(1);
+
   // 3. copy our index array in a element buffer for OpenGL to use
   GLuint EBO;
   glGenBuffers(1, &EBO);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-  // 4. then set the vertex attributes pointers
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(0); 
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.GetIndicesSize(), mesh.GetIndicesP(), GL_STATIC_DRAW); 
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -150,11 +156,11 @@ int main()
     float blueValue = sin(timeValue+2) / 2.0f + 0.5f;
 
     int vertexColorLocation = glGetUniformLocation(shaderProgram, "inputColor");
-    glUniform4f(vertexColorLocation, redValue, greenValue, blueValue, 1.0f);
+    glUniform3f(vertexColorLocation, redValue, greenValue, blueValue);
 
     // now render the triangle
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
   
     // swap buffers and poll IO events
     glfwSwapBuffers(window);
