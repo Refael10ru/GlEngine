@@ -1,4 +1,4 @@
-#include "typedef.hpp"
+#include "typedef.h"
 
 namespace okek
 {

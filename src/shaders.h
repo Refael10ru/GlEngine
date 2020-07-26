@@ -1,9 +1,14 @@
 const char* vertex_shader2 =
-"#version 400\n"
-"in vec3 vp;"
-"void main() {"
-"  gl_Position = vec4(vp, 1.0);"
-"}";
+    "#version 400\n"
+    "layout (location = 0) in vec3 aPos;"
+    "layout (location = 1) in vec3 Color;"
+    "out vec3 vertexColor;"
+    "out vec3 vertexPosition;"
+    "void main()"
+    "{"
+    "    vertexPosition = aPos;"
+    "    vertexColor = Color;"
+    "}";
 
 const char* fragment_shader2 =
 "#version 400\n"
@@ -16,13 +21,13 @@ const char* fragment_shader2 =
 "}";
 const char* fragment_shader =
 "#version 400\n"
+// position attribute
 "out vec4 FragColor;"
-
-"uniform vec4 ourColor;"
-
+"in vec3 ourColor;"
+  
 "void main()"
 "{"
-"   FragColor = ourColor;"
+"    FragColor = vec4(ourColor, 1.0);"
 "}";
 
 const char* vertex_shader =

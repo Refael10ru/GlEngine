@@ -3,8 +3,8 @@
 #include <GLFW/glfw3.h> // GLFW helper library
 #include <iostream>
 #include <cmath>
-#include "ColoredMesh.hpp"
-#include "shaders.hpp"
+#include "ColoredMesh.h"
+#include "shaders.h"
 
 
 int main() 
@@ -77,7 +77,7 @@ int main()
   int  success;
   char infoLog[512];
   GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vs, 1, &vertex_shader, NULL);
+  glShaderSource(vs, 1, &mesh.reader, NULL);
   glCompileShader(vs);
   glGetShaderiv(vs, GL_COMPILE_STATUS, &success);
   if(!success)
@@ -148,7 +148,7 @@ int main()
     float greenValue = sin(timeValue+1) / 2.0f + 0.5f;
     float blueValue = sin(timeValue+2) / 2.0f + 0.5f;
 
-    int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+    int vertexColorLocation = glGetUniformLocation(shaderProgram, "inputColor");
     glUniform4f(vertexColorLocation, redValue, greenValue, blueValue, 1.0f);
 
     // now render the triangle

@@ -1,4 +1,4 @@
-    #include "ColoredMesh.hpp"
+    #include "ColoredMesh.h"
     #include <cstdlib>
     #include <string.h>
 namespace okek
@@ -10,7 +10,7 @@ namespace okek
     {
         this->points = reinterpret_cast<ColoredCPoints*>(malloc(sizeVertices*sizeof(ColoredCPoints) + sizeof(unsigned long int) + 1));
         this->points->heap = true;
-        this->points->sizeColoredCPointsBytes = sizeVertices;
+        this->points->PointsBytes = sizeVertices;
         memcpy(this->points + sizeof(unsigned long int) + 1,
          vertices, sizeVertices);
 

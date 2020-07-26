@@ -1,4 +1,4 @@
-#include "typedef.hpp"
+#include "typedef.h"
 
 namespace okek
 {
@@ -13,7 +13,7 @@ namespace okek
     {
         //true if on heap
         bool heap;
-        unsigned long int sizeColoredCPointsBytes;
+        unsigned long int PointsBytes;
         ColoredCPoint Cpoints[];
     };
 
@@ -42,29 +42,30 @@ namespace okek
         void Setpoints(float vertices[],int sizeVertices);
 
         void SetPointsP(ColoredCPoints* Target);
-        //retreves meshpointer
+        //retreves pointer to "meshpoints"
         ColoredCPoints* getPointsP();
 
-    protected:
+        void SetUpReader();
+        const char* reader = 
+        "#version 400\n"
+        "layout (location = 0) in vec3 aPos;"   
+        "layout (location = 1) in vec3 aColor;" 
+        "out vec3 ourColor;"
+        "void main()"
+        "{"
+        "gl_Position = vec4(aPos, 1.0);"
+        "ourColor = aColor;" 
+        "}";
+    
         //a pointer to indices
         Cmesh_indices* indices;
 
         //a pointer to the ColoredMesh
         ColoredCPoints* points;
-        
+    protected:  
         
 
-        const char* reader = 
-        "#version 400\n"
-        "layout (location = 0) in vec3 aPos;"
-        "layout (location = 1) in vec3 Color;"
-        "out vec3 vertexColor;"
-        "out vec3 vertexPosition;"
-        "void main()"
-        "{"
-        "    vertexPosition = aPos;"
-        "    vertexColor = Color;"
-        "}";
+        
 
         static char parser[];
     };
