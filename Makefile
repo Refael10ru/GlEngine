@@ -1,5 +1,8 @@
-build: src/test/test.cpp	
-	g++ -o gltest src/test/test.cpp -g -Iinclude -lGL -lGLU -lglfw -lglew 
+build: src/*
+	g++ -o gltest src/* -g -Iinclude -lGL -lGLU -lglfw 
+
+headers:
+	g++ include/*.h 
 
 clear:
-	rm gltest
+	rm gltest include/*.gch
