@@ -1,9 +1,14 @@
+SourceFiles := $(ls *.cpp)
+
 build: src/*
 	make headers; 
 	make source; 	
 
 source:
-	g++ -o gltest src/*.cpp -g -Iinclude -lGL -lGLU -lglfw
+	g++ src/*.cpp -g -Iinclude -lGL -lGLU -lglfw
+
+objects:
+	g++ src/*.cpp -g -Iinclude -lGL -lGLU -lglfw
 
 headers:
 	g++ include/*.h 
