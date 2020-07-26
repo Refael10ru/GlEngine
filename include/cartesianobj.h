@@ -14,6 +14,10 @@ namespace CartesianObjects  // contains all the objects required by the cartesia
 		Coordinates2D(int x, int y) : X(y), Y(y) 
 		{
 		}
+		
+		Coordinates2D() : X(0), Y(0)
+		{
+		}
 	};
 
 	struct Coordinates3D // for storing a 3D coordinates
@@ -22,7 +26,10 @@ namespace CartesianObjects  // contains all the objects required by the cartesia
 
 		Coordinates3D(int x, int y, int z) : X(x), Y(y), Z(z)
 		{
-		} 
+		}
+
+		Coordinates3D() : X(0), Y(0), Z(0)
+		{} 
 	};
 	
 	enum GLEColor	// array index enums for pre defined color values 
@@ -42,6 +49,10 @@ namespace CartesianObjects  // contains all the objects required by the cartesia
 		float R, G, B; 
 
 		Color(float r, float g, float b) :  R(r), G(g), B(b) 
+		{
+		}
+
+		Color() : R(0), G(0), B(0)
 		{
 		}
 	};
@@ -64,7 +75,6 @@ namespace CartesianObjects  // contains all the objects required by the cartesia
 	};
 
 	static Color DefaultPointColor = GLEColors[(int)GLEColor::White]; // RGB value of the point, Object storing default color
-
 
 	struct Point2D   // for storing a point recognizable by 
 	{
@@ -119,6 +129,70 @@ namespace CartesianObjects  // contains all the objects required by the cartesia
 		}
 
 		Point2D(int x, int y, bool plotted, Color color) : Coordinates(Coordinates2D(x, y)), IsPlotted(plotted), plotStatus((PlotStatus)((int)Plotted)), ColorValue(color)
+		{
+		}
+
+		Point2D()
+		{
+		}
+	};
+	struct Point3D   // for storing a point recognizable by 
+	{
+		Coordinates3D Coordinates;
+		PlotStatus plotStatus;  // current plotstatus of the point
+		bool IsPlotted;   // bool for representing the plotstatus
+		
+		Color ColorValue;	// for storing the RGB value of the point
+
+		Point3D(Coordinates3D coordinates) : Coordinates(coordinates), plotStatus(PlotStatus::Hidden), ColorValue(DefaultPointColor)
+		{
+		}
+		
+		Point3D(Coordinates3D coordinates, Color color) : Coordinates(coordinates), plotStatus(PlotStatus::Hidden), ColorValue(color)
+		{
+		}
+		
+		Point3D(Coordinates3D coordinates, PlotStatus plotstatus) : Coordinates(coordinates), plotStatus(plotStatus), ColorValue(DefaultPointColor)
+		{
+		}
+
+		Point3D(Coordinates3D coordinates, PlotStatus plotstatus, Color color) : Coordinates(coordinates), plotStatus(plotStatus), ColorValue(color)
+		{
+		}
+
+		Point3D(int x, int y, int z) : Coordinates(Coordinates3D(x, y, z)), plotStatus(PlotStatus::Hidden), ColorValue(DefaultPointColor)
+		{
+		}
+	
+		Point3D(int x, int y, int z, Color color) : Coordinates(Coordinates3D(x, y, z)), plotStatus(PlotStatus::Hidden), ColorValue(color)
+		{
+		}
+
+		Point3D(int x, int y, int z,  PlotStatus plotstatus) : Coordinates(Coordinates3D(x, y, z)), plotStatus(plotStatus), IsPlotted((bool)((int)plotStatus)), ColorValue(DefaultPointColor) 
+		{
+		}
+
+		Point3D(int x, int y, int z, Color color, PlotStatus plotstatus) : Coordinates(Coordinates3D(x, y, z)), plotStatus(plotStatus), IsPlotted((bool)((int)plotStatus)), ColorValue(color) 
+		{
+		}
+
+		Point3D(Coordinates3D coordinates, bool plotted) : Coordinates(coordinates), IsPlotted(plotted), plotStatus((PlotStatus)((int)Plotted)), ColorValue(DefaultPointColor)
+		{
+		}
+		
+		Point3D(Coordinates3D coordinates, bool plotted, Color color) : Coordinates(coordinates), IsPlotted(plotted), plotStatus((PlotStatus)((int)Plotted)), ColorValue(color)
+		{
+		}
+
+		Point3D(int x, int y, int z, bool plotted) : Coordinates(Coordinates3D(x, y, z)), IsPlotted(plotted), plotStatus((PlotStatus)((int)Plotted)), ColorValue(DefaultPointColor)		
+		{
+		}
+
+		Point3D(int x, int y, int z, bool plotted, Color color) : Coordinates(Coordinates3D(x, y, z)), IsPlotted(plotted), plotStatus((PlotStatus)((int)Plotted)), ColorValue(color)
+		{
+		}
+
+		Point3D()
 		{
 		}
 	};
@@ -176,6 +250,103 @@ namespace CartesianObjects  // contains all the objects required by the cartesia
 		}
 		
 		GLPoint2D(int x, int y, Color color, bool plotted) : Coordinates(Coordinates2D(x / 10, y / 10)), IsPlotted(plotted), plotStatus((PlotStatus)((int)Plotted)), ColorValue(color)
+		{
+		}
+
+		GLPoint2D(Point2D point) : Coordinates(Coordinates2D(point.Coordinates.X / 10, point.Coordinates.Y / 10)), plotStatus(PlotStatus::Hidden), IsPlotted((bool)((int)Hidden)), ColorValue(DefaultPointColor)		
+		{
+		}
+		
+		GLPoint2D(Point2D point, Color color) : Coordinates(Coordinates2D(point.Coordinates.X / 10, point.Coordinates.Y / 10)), plotStatus(PlotStatus::Hidden), IsPlotted((bool)((int)Hidden)), ColorValue(color)		
+		{
+		}
+
+		GLPoint2D(Point2D point, PlotStatus plotstatus) : Coordinates(Coordinates2D(point.Coordinates.X / 10, point.Coordinates.Y / 10)), plotStatus(plotStatus), ColorValue(DefaultPointColor)
+		{
+		}
+
+		GLPoint2D(Point2D point, Color color, PlotStatus plotstatus) : Coordinates(Coordinates2D(point.Coordinates.X / 10, point.Coordinates.Y / 10)), plotStatus(plotStatus), ColorValue(color)		
+		{
+		}    
+		
+		GLPoint2D()
+		{
+		}
+	};
+
+	struct GLPoint3D    // for storing a point recognizable by 
+	{
+		Coordinates3D Coordinates;
+		PlotStatus plotStatus;  // current plotstatus of the point
+		bool IsPlotted;   // bool for representing the plotstatus
+
+		Color ColorValue;	//	for storing the RGB value of the point
+
+		GLPoint3D(Coordinates3D coordinates) : Coordinates(Coordinates3D(coordinates.X / 10, coordinates.Y / 10, coordinates.Z / 10)), plotStatus(Hidden), IsPlotted((bool)((int)Hidden)), ColorValue(DefaultPointColor)		
+		{
+		}
+		
+		GLPoint3D(Coordinates3D coordinates, Color color) : Coordinates(Coordinates3D(coordinates.X / 10, coordinates.Y / 10, coordinates.Z)), plotStatus(PlotStatus::Hidden), IsPlotted((bool)((int)Hidden)), ColorValue(color)		
+		{
+		}
+
+		GLPoint3D(Coordinates3D coordinates, PlotStatus plotstatus) : Coordinates(Coordinates3D(coordinates.X / 10, coordinates.Y / 10, coordinates.Z / 10)), plotStatus(plotStatus), ColorValue(DefaultPointColor)
+		{
+		}
+
+		GLPoint3D(Coordinates3D coordinates, Color color, PlotStatus plotstatus) : Coordinates(Coordinates3D(coordinates.X / 10, coordinates.Y / 10, coordinates.Z / 10)), plotStatus(plotStatus), ColorValue(color)		
+		{
+		}
+
+		GLPoint3D(int x, int y, int z) : Coordinates(Coordinates3D(x / 10, y / 10, z / 10)), plotStatus(PlotStatus::Hidden), ColorValue(DefaultPointColor)
+		{
+		}
+		
+		GLPoint3D(int x, int y, int z, Color color) : Coordinates(Coordinates3D(x / 10, y / 10, z / 10)), plotStatus(PlotStatus::Hidden), ColorValue(color)
+		{
+		}
+		
+		GLPoint3D(int x, int y, int z, PlotStatus plotstatus) : Coordinates(Coordinates3D(x / 10, y / 10, z / 10)), plotStatus(plotStatus), ColorValue(DefaultPointColor)
+		{
+		}
+		
+		GLPoint3D(int x, int y, int z, Color color, PlotStatus plotstatus) : Coordinates(Coordinates3D(x / 10, y / 10, z / 10)), plotStatus(plotStatus), ColorValue(color)
+		{
+		}
+		
+		GLPoint3D(Coordinates3D coordinates, bool plotted) : Coordinates(Coordinates3D(coordinates.X / 10, coordinates.Y / 10, coordinates.Z)), IsPlotted(plotted), plotStatus((PlotStatus)((int)Plotted)), ColorValue(DefaultPointColor)
+		{
+		}
+		
+		GLPoint3D(Coordinates3D coordinates, Color color, bool plotted) : Coordinates(Coordinates3D(coordinates.X / 10, coordinates.Y / 10, coordinates.Z / 10)), IsPlotted(plotted), plotStatus((PlotStatus)((int)Plotted)), ColorValue(color)
+		{
+		}
+
+		GLPoint3D(int x, int y, int z, bool plotted) : Coordinates(Coordinates3D(x / 10, y / 10, z / 10)), IsPlotted(plotted), plotStatus((PlotStatus)((int)Plotted)), ColorValue(DefaultPointColor)
+		{
+		}
+		
+		GLPoint3D(int x, int y, int z, Color color, bool plotted) : Coordinates(Coordinates3D(x / 10, y / 10, z / 10)), IsPlotted(plotted), plotStatus((PlotStatus)((int)Plotted)), ColorValue(color)
+		{
+		}
+		
+		GLPoint3D(Point3D point) : Coordinates(Coordinates3D(point.Coordinates.X / 10, point.Coordinates.Y / 10, point.Coordinates.Z / 10)), plotStatus(PlotStatus::Hidden), IsPlotted((bool)((int)Hidden)), ColorValue(DefaultPointColor)		
+		{
+		}
+		
+		GLPoint3D(Point3D point, Color color) : Coordinates(Coordinates3D(point.Coordinates.X / 10, point.Coordinates.Y / 10, point.Coordinates.Z / 10)), plotStatus(PlotStatus::Hidden), IsPlotted((bool)((int)Hidden)), ColorValue(color)		
+		{
+		}
+
+		GLPoint3D(Point3D point, PlotStatus plotstatus) : Coordinates(Coordinates3D(point.Coordinates.X / 10, point.Coordinates.Y / 10, point.Coordinates.Z / 10)), plotStatus(plotStatus), ColorValue(DefaultPointColor)
+		{
+		}
+
+		GLPoint3D(Point3D point, Color color, PlotStatus plotstatus) : Coordinates(Coordinates3D(point.Coordinates.X / 10, point.Coordinates.Y / 10, point.Coordinates.Z / 10)), plotStatus(plotStatus), ColorValue(color)		
+		{
+		}    
+
+		GLPoint3D()
 		{
 		}    
 	};

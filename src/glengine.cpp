@@ -1,2 +1,5 @@
 #include "glengine.h"
 
+main() 
+{
+}
