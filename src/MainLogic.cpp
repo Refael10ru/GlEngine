@@ -58,7 +58,8 @@ int main()
     // positions         // colors
      0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
     -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   // top 
+    -0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f
   };    
   float vertices[] = {
      0.5f,  0.5f, 0.0f,  // top right
@@ -71,7 +72,7 @@ int main()
     1, 2, 3    // second triangle
   }; 
   
-  okek::ColoredMesh mesh(vertices ,sizeof(vertices) ,indices, sizeof(indices));
+  okek::ColoredMesh mesh(vertices ,3 ,indices, 2);
 
 
   int  success;
@@ -92,7 +93,7 @@ int main()
   if(!success)
   {
     glGetShaderInfoLog(vs, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+    std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
   }
 
   GLuint shaderProgram = glCreateProgram();

@@ -1,20 +1,16 @@
 #include "typedef.h"
-
+#include <iostream>
+#include <vector>
 namespace okek
 {
 
-    struct ColoredCPoint
+    class ColoredCPoint
     {
+    public:
         Cvec3 position;
         Color color;
-    };
-
-    struct ColoredCPoints
-    {
-        //true if on heap
-        bool heap;
-        unsigned long int PointsBytes;
-        ColoredCPoint Cpoints[];
+        ColoredCPoint() = default;
+        ColoredCPoint(float* Target);
     };
 
     class ColoredMesh
@@ -37,13 +33,15 @@ namespace okek
 
         void SetMeshIndices(unsigned int indices[], int sizeIndices);
         //dont use of indices on stack
-        void SetIndicesP(Cmesh_indices* Target);
+        void SetIndices(std::vector<CtriangleOffsets> Target);
         
         void Setpoints(float vertices[],int sizeVertices);
 
-        void SetPointsP(ColoredCPoints* Target);
+        void SetPointsVector(std::vector<ColoredCPoint> Target);
         //retreves pointer to "meshpoints"
-        ColoredCPoints* getPointsP();
+        ColoredCPoint* GetPointsP();
+
+        unsigned long int GetPointsSize();
 
         void SetUpReader();
         const char* reader = 
@@ -57,13 +55,13 @@ namespace okek
         "ourColor = aColor;" 
         "}";
     
-        //a pointer to indices
-        Cmesh_indices* indices;
-
-        //a pointer to the ColoredMesh
-        ColoredCPoints* points;
+       
     protected:  
-        
+         //a vector of indices
+        std::vector<CtriangleOffsets> indices;
+
+        //a vector of ColoredMesh
+        std::vector<ColoredCPoint> points;
 
         
 

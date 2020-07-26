@@ -1,5 +1,6 @@
 #include "typedef.h"
 
+
 namespace okek
 {
     vec3::vec3(float* fTarget)
@@ -20,18 +21,5 @@ namespace okek
     Ctriangle triangle::get() { return this->tri; }
     float* triangle::getp() { return this->tri.dir; }
 
-
-
-
-
-    TexturedMesh::TexturedMesh(TexturedMesh* Target)
-    {
-        this->points = Target->points;
-        this->indices = Target->indices;
-    }
-    void TexturedMesh::SetIndicesP(Cmesh_indices* Target) { this->indices = Target; }
-    void TexturedMesh::SetPointsP(TexturedCPoints* Target) { this->points = Target; }
-    TexturedCPoints* TexturedMesh::getPointsP() { return this->points; }
-    
 
 };

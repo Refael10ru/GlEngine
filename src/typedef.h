@@ -43,19 +43,10 @@ namespace okek
         TexturedCPoint points[];
     };
 
-    struct CtriangleOffsets
-    {
-        int offset[3];
-    };
-
-    struct Cmesh_indices 
-    {
-        //true if on heap
-        bool heap;
-        //represents how much triangles offsets groups together
-        unsigned long int OffsetsBytes;
-        //instructions for how to group points into triangles
-        CtriangleOffsets offsets[];   
+    class CtriangleOffsets
+    {   
+    public:
+        unsigned int offset[3];
     };
 
     class vec3
@@ -91,46 +82,4 @@ namespace okek
     };
 
 
-
-    class TexturedMesh
-    {
-    public:
-        TexturedMesh() = default;
-
-        //move costructor
-        TexturedMesh(TexturedMesh*);
-        //copy constructor
-        TexturedMesh(TexturedMesh&);
-
-        //this is a copy constructor
-        //sizeVertices = sum of points
-        //sizeIndices = sum of triangles
-        TexturedMesh(float vertices[],int sizeVertices,
-        unsigned int indices[], int sizeIndices,
-        bool heap);
-
-        ~TexturedMesh();
-
-        void SetMeshIndices(unsigned int indices[], int sizeIndices);
-        
-        void SetIndicesP(Cmesh_indices* Target);
-        
-        void SetMeshpoints(float vertices[],int sizeVertices);
-
-        void SetPointsP(TexturedCPoints* Target);
-        //retreves meshpointer
-        TexturedCPoints* getPointsP();
-
-       
-
-    protected:
-        //a pointer to indices
-        TexturedCPoints* points;
-        unsigned int MeshPointsID;
-        //a pointer to the ColoredMesh
-        Cmesh_indices* indices;
-        unsigned int MeshIndicesID;
-
-        const char* ReadShader;
-    };
 };
