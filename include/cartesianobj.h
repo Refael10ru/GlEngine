@@ -57,7 +57,7 @@ namespace CartesianObjects  // contains all the objects required by the cartesia
 		}
 	};
 
-	Color GLEColors[] = {	// pre defined RGB values for quick access ()
+	static Color GLEColors[] = {	// pre defined RGB values for quick access ()
 		Color(148, 0, 211),	//	Violet
 		Color(75, 0, 130),	//	Indigo
 		Color(0, 0, 255),	//	Blue

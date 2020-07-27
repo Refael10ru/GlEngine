@@ -1,8 +1,6 @@
 // for definition of functions declared in algorithms.h
 #include "algorithms.h"
 
-// main() { }
-
 namespace Algorithms
 {
 	template<typename T>
