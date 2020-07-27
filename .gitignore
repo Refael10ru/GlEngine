@@ -1,4 +1,4 @@
 .vscode/
 */test
 */*.gch
-
+*/a.out

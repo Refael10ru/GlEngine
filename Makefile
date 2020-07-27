@@ -14,4 +14,4 @@ headers:
 	g++ include/*.h 
 
 clear:
-	rm gltest include/*.gch */a.out
+	rm gltest include/*.gch a.out

@@ -64,15 +64,13 @@ namespace Algorithms
 	class Convert
 	{
 	public:
-		static Point2D * VectorToPointArray(vector<Point2D > pointVector);	// converts vector<Point2D > to a Point2D  array;
+		static Point2D* VectorToPointArray(vector<Point2D > pointVector);	// converts vector<Point2D > to a Point2D  array;
 
 		static GLPoint2D* VectorToGLPointArray(vector<Point2D> pointVector);	// converts vector<Point2D> to a Point2D array
-		;
 		
 		static Point2D* GLVectorToPointArray(vector<GLPoint2D> pointVector);	// converts vector<GLPoint> to a Point array
-		;
-		
+				
 		static GLPoint2D* VectorToGLPointArray(vector<GLPoint2D> pointVector); // converts vector<GLPoint2D> to a GLPoint2D array
-		;
+	
 	};
 }
