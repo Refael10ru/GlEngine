@@ -21,12 +21,6 @@ namespace okek
         memcpy(this->points.data(), vertices, sizeVertices*sizeof(ColoredCPoint));
         this->indices.resize(sizeIndices);
         memcpy(this->indices.data(), indices, sizeIndices*sizeof(CtriangleOffsets));
-        for(int i = 0; i < sizeVertices ;i++)
-        {
-            std::cout << this->points[i].position.dir[0] << " ";
-            std::cout << this->points[i].position.dir[1] << " ";
-            std::cout << this->points[i].position.dir[2] << "\n";
-        }
         
         //std::cout "size of points is "<< this->points.size() << "\n";
 
