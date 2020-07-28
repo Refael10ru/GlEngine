@@ -1,4 +1,5 @@
 #include "typedef.h"
+#include <cstring>
 #include <iostream>
 #include <vector>
 namespace okek
@@ -57,7 +58,7 @@ namespace okek
         "ourColor = aColor;" 
         "}";
     
-       
+        
     protected:  
          //a vector of indices
         std::vector<CtriangleOffsets> indices;
@@ -65,7 +66,7 @@ namespace okek
         //a vector of ColoredMesh
         std::vector<ColoredCPoint> points;
 
-        
+        void debug(int a);
 
         static char parser[];
     };

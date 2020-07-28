@@ -1,5 +1,4 @@
-    #include "ColoredMesh.h"
-    #include <cstring>
+#include "ColoredMesh.h"
 namespace okek
 {
     ColoredCPoint::ColoredCPoint(float* Target)
@@ -21,8 +20,11 @@ namespace okek
         memcpy(this->points.data(), vertices, sizeVertices*sizeof(ColoredCPoint));
         this->indices.resize(sizeIndices);
         memcpy(this->indices.data(), indices, sizeIndices*sizeof(CtriangleOffsets));
+
+        std::cout << "size of points is "<< this->points.size() << "\n";
         
-        //std::cout "size of points is "<< this->points.size() << "\n";
+        debug(4);
+        debug(5);
 
         
     }
@@ -50,4 +52,15 @@ namespace okek
     unsigned long int ColoredMesh::GetPointsSize()
     { return this->points.size()*sizeof(ColoredCPoint); }
 
+    void ColoredMesh::debug(int a)
+    {
+        std::cout << "info for point with index " << a << "\n";
+        
+        std::cout << "X : " << this->points[a].position.dir[0] << " ";
+        std::cout << "Y : " << this->points[a].position.dir[1] << " ";
+        std::cout << "Z : " << this->points[a].position.dir[2] << " \n";
+        std::cout << "R : " << this->points[a].color.R << " ";
+        std::cout << "G : " << this->points[a].color.G << " ";
+        std::cout << "B : " << this->points[a].color.B << "\n";
+    }
 }

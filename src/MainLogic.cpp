@@ -1,10 +1,9 @@
+
 #include <stdio.h>
-#include <GL/glew.h> // include GLEW and new version of GL on Windows
-#include <GLFW/glfw3.h> // GLFW helper library
-#include <iostream>
 #include <cmath>
 #include "ColoredMesh.h"
 #include "shaders.h"
+#include "shaderStrings.h"
 
 
 int main() 
@@ -56,10 +55,12 @@ int main()
 
   float ColoredVertices[] = {
     // positions         // colors
-     0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
+     1.0f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
     -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
      0.5f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   // top 
-    -0.5f,  0.5f, 0.0f,  0.5f, 0.5f, 0.5f
+    -0.5f,  0.5f, 0.0f,  0.5f, 0.5f, 0.5f,
+     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,
+     0.0f,  1.0f, 0.0f,  0.0f, 0.0f, 1.0f  
   };    
   float vertices[] = {
      0.5f,  0.5f, 0.0f,  // top right
@@ -69,10 +70,12 @@ int main()
   };
   unsigned int indices[] = {  // note that we start from 0!
     0, 1, 2,   // first triangle
-    1, 2, 3    // second triangle
+    1, 2, 3,   // second triangle
+    2, 3, 4,
+    2, 3, 4
   }; 
   
-  okek::ColoredMesh mesh(ColoredVertices ,4 ,indices, 2);
+  okek::ColoredMesh mesh(ColoredVertices ,6 ,indices, 3);
 
 
   int  success;
@@ -160,7 +163,7 @@ int main()
 
     // now render the triangle
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 10, GL_UNSIGNED_INT, 0);
   
     // swap buffers and poll IO events
     glfwSwapBuffers(window);
