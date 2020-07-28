@@ -23,8 +23,6 @@ namespace okek
 
         std::cout << "size of points is "<< this->points.size() << "\n";
         
-        debug(4);
-        debug(5);
 
         
     }

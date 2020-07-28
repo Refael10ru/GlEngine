@@ -1,3 +1,6 @@
+
+#define _typedef_
+
 namespace okek
 {
     struct Cvec3

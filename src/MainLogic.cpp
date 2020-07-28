@@ -2,12 +2,27 @@
 #include <stdio.h>
 #include <cmath>
 #include "ColoredMesh.h"
-#include "shaders.h"
 #include "shaderStrings.h"
 
 
-int main() 
+
+int main(int argc, char** argv ) 
 {
+  //---------------------------->
+  std::string PathToBin(argv[0]);
+  //---------------------------->
+
+  
+  for(int i = PathToBin.length()-1 ; i >= 0; i--)
+    if(*(&PathToBin[i]) == '/')
+    {
+      PathToBin.resize(i+1);
+      break;
+    }
+
+  for(int i = 0; i < argc; i++)
+    std::cout << argv[i] << "\n";
+
   // start GL context and O/S window using the GLFW helper library
   if (!glfwInit()) {
     fprintf(stderr, "ERROR: could not start GLFW3\n");
@@ -20,7 +35,7 @@ int main()
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  GLFWwindow* window = glfwCreateWindow(640, 480, "Hello Triangle", NULL, NULL);
+  GLFWwindow* window = glfwCreateWindow(640, 480, "GLEngine", NULL, NULL);
   if (!window) {
     fprintf(stderr, "ERROR: could not open window with GLFW3\n");
     glfwTerminate();
@@ -75,44 +90,10 @@ int main()
     2, 3, 4
   }; 
   
-  okek::ColoredMesh mesh(ColoredVertices ,6 ,indices, 3);
+  okek::ColoredMesh mesh(ColoredVertices ,6 ,indices, 4);
+  okek::Shader ourShader(PathToBin.c_str() ,"../Shaders/ColoredMesh.vs",
+   "../Shaders/ColoredMesh.fs");
 
-
-  int  success;
-  char infoLog[512];
-  GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vs, 1, &mesh.reader, NULL);
-  glCompileShader(vs);
-  glGetShaderiv(vs, GL_COMPILE_STATUS, &success);
-  if(!success)
-  {
-    glGetShaderInfoLog(vs, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-  }
-
-  GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fs, 1, &fragment_shader, NULL);
-  glCompileShader(fs);
-  glGetShaderiv(fs, GL_COMPILE_STATUS, &success);
-  if(!success)
-  {
-    glGetShaderInfoLog(vs, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-  }
-
-  GLuint shaderProgram = glCreateProgram();
-  glAttachShader(shaderProgram, fs);
-  glAttachShader(shaderProgram, vs);
-  glLinkProgram(shaderProgram);
-  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-  if(!success) {
-    glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-    std::cout << "Error has acured!";
-  }
-  
-  glDeleteShader(vs);
-  glDeleteShader(fs);  
-  
   //------------------------------------->
   // ..:: Initialization code ::..
   // 1. bind Vertex Array Object
@@ -141,6 +122,9 @@ int main()
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 
+
+
+
   while(!glfwWindowShouldClose(window)) 
   {
 
@@ -150,7 +134,9 @@ int main()
     glClear(GL_COLOR_BUFFER_BIT);
 
     // be sure to activate the shader
-    glUseProgram(shaderProgram);
+    //glUseProgram(shaderProgram);
+
+    ourShader.use();
   
     // update the uniform color
     float timeValue = glfwGetTime();
@@ -158,12 +144,11 @@ int main()
     float greenValue = sin(timeValue+1) / 2.0f + 0.5f;
     float blueValue = sin(timeValue+2) / 2.0f + 0.5f;
 
-    int vertexColorLocation = glGetUniformLocation(shaderProgram, "inputColor");
-    glUniform3f(vertexColorLocation, redValue, greenValue, blueValue);
+    ourShader.setfvec3("inputColor", redValue, greenValue, blueValue);
 
     // now render the triangle
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 10, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
   
     // swap buffers and poll IO events
     glfwSwapBuffers(window);

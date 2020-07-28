@@ -13,7 +13,7 @@ UNDEF		:=
 BUILD		:= $(DEBUG)
 LINKTYPE	:= $(STATIC)
 
-CXX_FLAGS 	:= -std=c++17 $(BUILD) $(LINKTYPE) -lglfw -lGL -lX11 -lpthread -ldl -lGLEW
+CXX_FLAGS 	:= -std=c++17  $(BUILD) $(LINKTYPE) -lglfw -lGL -lX11 -lpthread -ldl -lGLEW
 CXX			:= g++
 
 BIN			:= bin
@@ -48,7 +48,7 @@ $(OBJ)/$(PLATFORM)%.o : $(SRC)%.cpp $(DEPENDENCIES)
 $(BIN)/$(EXECUTABLE) : $(OBJECTS)
 	$(CXX) $^ $(CXX_FLAGS)  -o $(BIN)/$(EXECUTABLE) $(LIBRARIES) $(LIB_FLAG) $(LINK_FLAGS) 
 
-.PHONY: clean all
+.PHONY: clean clear all
 all:
 	$(BIN)/$(EXECUTABLE)
 clean:

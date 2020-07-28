@@ -21,7 +21,6 @@ const char* fragment_shader2 =
 "}";
 const char* fragment_shader =
 "#version 400\n"
-// position attribute
 "out vec4 FragColor;"
 "in vec3 ourColor;"
 "uniform vec3 inputColor;"
