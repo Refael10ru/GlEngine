@@ -10,13 +10,9 @@
 #include "cartesianobj.h"
 #include "glengine.h"
 
-using namespace DataStructures;
-using namespace CartesianObjects;
-using namespace GLEngine;
 using namespace std;
 
-
-namespace Algorithms
+namespace GLEngine
 {
 	class RandomAlgos
 	{
@@ -26,15 +22,24 @@ namespace Algorithms
 		 
 		static int GetIndex(Point2D point, vector<Point2D> pointArray, int arrayLength);
 
+		template<typename T>	// template for general data types
+		static void PrintArray(vector<T> array);
+
 		template<typename T>
 		static bool IsElement(T val, vector<T> pointVector);
 
 		template<typename T> 		
 		static int PointCmp(T point, T point1);
 		
-		static void PrintVector(vector<Point2D> pointVector);
+
+		template<typename T>	
+		static void PrintVector(vector<T>);
+
+		template<typename T>	// todo: use a defined RegEx for printf();
+		static void PrintPoint2DVector(vector<T> pointVector);	// for printing 2D Points/GLPoints 
 		
-		static void PrintVector(vector<GLPoint2D> pointVector);
+		template<typename T>
+		static void PrintPoint3DVector(vector<T> pointVector);	// for printing 3D Points/GLPoints		
 	};
 
 	class Sort
@@ -45,8 +50,9 @@ namespace Algorithms
 		static void BubbleSort(int* array, int len);
 
 		static void BubbleSort(vector<Point2D> pointVector);
-		
-		static void BubbleSort(vector<GLPoint2D> pointVector);
+
+		template<typename T> 
+		static void BubbleSort(vector<T> pointVector);
 	};
 
 	class Search
@@ -56,8 +62,11 @@ namespace Algorithms
 
 		static int BinarySearch(Point2D val, vector<Point2D> array, int start, int end);
 		
-		static int BinarySearch(GLPoint2D val, vector<GLPoint2D> array, int start, int end);
-		
+		template<typename T>
+		static int BinarySearch(T val, vector<T> array, int start, int end);
+
+		static int BinarySearch(GLPoint3D val, vector<GLPoint3D> array, int start, int end);
+
 		static int BinarySearch(int val, int* array, int start, int end);
 	};
 
@@ -72,5 +81,15 @@ namespace Algorithms
 				
 		static GLPoint2D* VectorToGLPointArray(vector<GLPoint2D> pointVector); // converts vector<GLPoint2D> to a GLPoint2D array
 	
+		static Point3D* VectorToPointArray(vector<Point3D> pointVector);	// converts vector<Point3D> to a Point3D  array;
+
+		static GLPoint3D* VectorToGLPointArray(vector<Point3D> pointVector);	// converts vector<Point3D> to a Point3D array
+		
+		static Point3D* GLVectorToPointArray(vector<GLPoint3D> pointVector);	// converts vector<GLPoint3D> to a Point3D array
+				
+		static GLPoint3D* VectorToGLPointArray(vector<GLPoint3D> pointVector); // converts vector<GLPoint3D> to a GLPoint3D array
+
+		Convert()
+		{}
 	};
 }

@@ -1,5 +1,3 @@
-SourceFiles := $(ls *.cpp)
-
 build: src/*
 	make headers; 
 	make source; 	
@@ -15,3 +13,5 @@ headers:
 
 clear:
 	rm gltest include/*.gch a.out
+
+$(ObjectFile)%.o: $(SourceFiles)%.ppp 

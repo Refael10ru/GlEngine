@@ -1,6 +1,6 @@
 #include "ds.h"
 
-namespace DataStructures
+namespace GLEngine
 {
     Point2D* Stack::ToArray(stack<Point2D> points)
     {

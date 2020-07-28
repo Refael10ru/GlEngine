@@ -5,7 +5,7 @@
 #include <stack>
 #include <vector>
 
-namespace CartesianObjects  // contains all the objects required by the cartesian system
+namespace GLEngine  // contains all the objects required by the cartesian system
 {
 	struct Coordinates2D // for storing a 2D coordinates
 	{

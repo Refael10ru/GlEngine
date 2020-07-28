@@ -7,8 +7,6 @@
 #include "cartesianobj.h"
 #include "cartesian.h"
 
-using namespace CartesianObjects;
-
 namespace GLEngine 
 {
 	class Window	// stores the config 
@@ -23,5 +21,14 @@ namespace GLEngine
 
 		Window(Coordinates2D dimensions) : Dimensions(dimensions), Title("New Window")
 		{}
+	};
+
+
+	class Renderer
+	{
+	public:
+		static void Initialize()
+		{
+		}
 	};
 }

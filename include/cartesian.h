@@ -6,20 +6,26 @@
 #include <stack>
 #include "cartesianobj.h"
 
-using namespace CartesianObjects;
+#ifndef ALGORITHMS_H
+	#include "algorithms.h"
+#endif
 
-namespace Cartesian
+namespace GLEngine
 {
-	template<typename T>  // to make the class compatiuble with both 2D and 3D points
-	class Plane
+	class Plane2D
 	{
 	public:
-		std::vector<T> PointVector;  // for storing all the points present in the plane
+		std::vector<Point2D> PointVector;  // for storing all the points present in the plane
 		
-		T* GLPointArray;
+		GLPoint2D* GLPointArray;
 
-		Plane(std::vector<T> pointVector) : PointVector(pointVector), GLPointArray(new T[0])	// temporary contstructor
+		Plane2D(std::vector<Point2D> pointVector) : PointVector(pointVector), GLPointArray(Convert::VectorToGLPointArray(this->PointVector))	// temporary contstructor
 		{
 		}	
+
+		void Update(); // syncs the GLPoint array with PointVector
+
+		bool Add(Point2D);	// adds the provided Point2D to PointVector and sorts the the updated GLPointArray	
+
 	};
 }

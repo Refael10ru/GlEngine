@@ -8,10 +8,9 @@
 #include <stdlib.h> 
 #include "cartesianobj.h"
 
-using namespace CartesianObjects;
 using namespace std;
 
-namespace DataStructures
+namespace GLEngine
 {
 	class Stack
 	{
