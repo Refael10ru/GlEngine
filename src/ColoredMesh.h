@@ -1,7 +1,10 @@
+#ifndef _COLOREDMESH_
+#define _COLOREDMESH_
 #include "shaders.h"
 #include <cstring>
 #include <iostream>
 #include <vector>
+
 namespace okek
 {
 
@@ -72,3 +75,4 @@ namespace okek
     };
 
 };
+#endif

@@ -1,5 +1,5 @@
-
-#define _typedef_
+#ifndef _TYPEDEF_
+#define _TYPEDEF_
 
 namespace okek
 {
@@ -86,3 +86,4 @@ namespace okek
 
 
 };
+#endif

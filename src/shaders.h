@@ -1,6 +1,7 @@
+#ifndef _SHADERS_
+#define _SHADERS_
+
 #include <string>
-#include <fstream>
-#include <sstream>
 #include <GL/glew.h> // include GLEW and new version of GL on Windows
 #include <GLFW/glfw3.h> // GLFW helper library
 #include <iostream>
@@ -33,7 +34,7 @@ namespace okek
 
 };
 
-
+#endif
 
 
 
