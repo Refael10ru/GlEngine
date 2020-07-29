@@ -2,9 +2,8 @@
 #include <stdio.h>
 #include <cmath>
 #include "ColoredMesh.h"
-#include "shaderStrings.h"
 
-
+#include "TexturedMesh.h"
 
 int main(int argc, char** argv ) 
 {
@@ -19,7 +18,7 @@ int main(int argc, char** argv )
       PathToBin.resize(i+1);
       break;
     }
-
+  std::cout << "Program args:" << argc << "\n";
   for(int i = 0; i < argc; i++)
     std::cout << argv[i] << "\n";
 
@@ -53,12 +52,12 @@ int main(int argc, char** argv )
     return -1;
   }
 
-
+  /*
   // get version info
   const GLubyte* renderer = glGetString(GL_RENDERER); // get renderer string
   const GLubyte* version = glGetString(GL_VERSION); // version as a string
   printf("Renderer: %s\n", renderer);
-  printf("OpenGL version supported %s\n", version);
+  printf("OpenGL version supported %s\n", version);*/
 
 
 
@@ -91,8 +90,11 @@ int main(int argc, char** argv )
   }; 
   
   okek::ColoredMesh mesh(ColoredVertices ,6 ,indices, 4);
-  okek::Shader ourShader(PathToBin.c_str() ,"../Shaders/ColoredMesh.vs",
+  okek::Shader ourShader(PathToBin ,"../Shaders/ColoredMesh.vs",
    "../Shaders/ColoredMesh.fs");
+  okek::VAO<okek::TexturedMesh> ree;
+  okek::TexturedMesh oke = okek::TexturedMesh();
+  oke.CopyToGPU();
 
   //------------------------------------->
   // ..:: Initialization code ::..

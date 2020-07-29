@@ -3,8 +3,8 @@
 namespace okek
 {
 
-    Shader::Shader(const char* pathtobin,const char* vertexPath,
-     const char* fragmentPath)
+    Shader::Shader(std::string pathtobin,std::string vertexPath,
+     std::string fragmentPath)
     {   
         this->PathToBin = pathtobin;
         // 1. retrieve the vertex/fragment source code from filePath
@@ -14,7 +14,7 @@ namespace okek
         std::string fragmentCode;
         tmpvertexpath += vertexPath;
         tmpfragmentpath += fragmentPath;
-    
+        //std::cout << pathtobin << "\n";
         vertexCode = IO::GetStringFile(tmpvertexpath);
         fragmentCode =IO::GetStringFile(tmpfragmentpath);
         const char* vShaderCode = vertexCode.c_str();

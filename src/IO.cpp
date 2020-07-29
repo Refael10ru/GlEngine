@@ -10,6 +10,7 @@ namespace okek
         ifstream.exceptions (std::ifstream::failbit | std::ifstream::badbit);
         try 
         {
+            //std::cout << Path << "\n";
             // open files
             ifstream.open(Path);
             std::stringstream vShaderStream;
@@ -22,8 +23,8 @@ namespace okek
         }
         catch(std::ifstream::failure)
         {
-            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
-            return "EXCEPTION::OCCURED";
+            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ\n" << Path << std::endl;
+            return "EXCEPTION::INFILEREADING";
         }
 
     }

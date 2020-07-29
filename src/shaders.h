@@ -2,6 +2,7 @@
 #define _SHADERS_
 
 #include <string>
+
 #include <GL/glew.h> // include GLEW and new version of GL on Windows
 #include <GLFW/glfw3.h> // GLFW helper library
 #include <iostream>
@@ -15,7 +16,7 @@ namespace okek
         // the program ID
         unsigned int ID;
         // constructor reads and builds the shader
-        Shader(const char* pathToBin,const char* vertexPath, const char* fragmentPath);
+        Shader(std::string pathToBin,std::string vertexPath, std::string fragmentPath);
         // use/activate the shader
         void use();
         // utility uniform functions

@@ -21,7 +21,7 @@ namespace okek
         this->indices.resize(sizeIndices);
         memcpy(this->indices.data(), indices, sizeIndices*sizeof(CtriangleOffsets));
 
-        std::cout << "size of points is "<< this->points.size() << "\n";
+        //std::cout << "size of points is "<< this->points.size() << "\n";
         
 
         
@@ -35,6 +35,9 @@ namespace okek
     {
 
     }
+    void ColoredMesh::SetPoints(std::vector<ColoredCPoint> Target)
+    { this->points = Target; }
+
     void ColoredMesh::SetIndices(std::vector<CtriangleOffsets> Target)
     { this->indices = Target; }
     

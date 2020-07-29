@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/bin/WallPaperLogic",
-            "args": [],
+            "args": ["/media/okek/main/GLEngine/Test/bin/WallPaperLogic"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

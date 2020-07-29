@@ -1,4 +1,3 @@
-
 #version 400
 // position attribute
 out vec4 FragColor;
