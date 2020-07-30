@@ -4,9 +4,9 @@
 
 
 #include "shaders.h"
-#include<vector>
-#include<iostream>
-#include"typedef.h"
+#include <vector>
+#include <iostream>
+#include "typedef.h"
 #include <cstring>
 
 
@@ -37,7 +37,6 @@ public:
         memcpy(this->VBO.data(), VBO, sizeVertices*sizeof(T));
         this->EBO.resize(sizeIndices);
         memcpy(this->EBO.data(), EBO, sizeIndices*sizeof(CtriangleOffsets));
-
     }
 
     VAO(std::string PathToBin,std::string PathToOBJ)
@@ -47,8 +46,9 @@ public:
     }
 
     ~VAO() = default;
-
+    
     //initializes atributes of VBO and Copies EBO/VBO onto the GPU 
+    //this function calls pure vertual function! (SetAtributes())
     void InitializeOnGPU()
     {
         // 1. initialize VAO
@@ -59,7 +59,7 @@ public:
         glBindBuffer(GL_ARRAY_BUFFER, VBO_ID);
         glBufferData(GL_ARRAY_BUFFER, this->GetVBOSize() , this->GetVBOP(), GL_STATIC_DRAW);
 
-        // 3. initialize memory layot of VBO
+        // 3. initialize memory layout of VBO
         SetAtributes();
 
         // 4. copy our index array in a element buffer for OpenGL to use
@@ -116,7 +116,7 @@ protected:
     //a vector of VAO elements
     std::vector<T> VBO;
 
-    void debug(int i)
+    void PrintEBO(int i)
     {std::cout << this->EBO[i].offset[0] << " : " << this->EBO[i].offset[1] << " : " << this->EBO[i].offset[2] << "\n";}
     };
 };

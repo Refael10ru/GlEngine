@@ -19,11 +19,7 @@ namespace okek
         float R, G, B;
     };    
 
-    struct TexturedCPoint
-    {
-        Cvec3 position;
-        TextureCord texturecord;
-    };
+
 
     struct Ctriangle
     {
@@ -47,16 +43,6 @@ namespace okek
         unsigned int offset[3];
     };
 
-    class vec3
-    {
-    public:
-
-        //geter for stored var
-        Cvec3 get();
-    protected:
-        Cvec3 vec;
-
-    };
 
     class triangle
     {

@@ -93,22 +93,23 @@ int main(int argc, char** argv )
     2, 3, 4,   // third triangle
     2, 3, 4    // forth triangle
   }; 
-  float texCoords[] = {
-    0.0f, 0.0f,  // lower-left corner  
-    1.0f, 0.0f,  // lower-right corner
-    0.5f, 1.0f   // top-center corner
-  };
+float tvertices[] = {
+    // positions          // colors           // texture coords
+     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
+};
   
   okek::ColoredMesh mesh(ColoredVertices ,5 ,indices, 3);
   mesh.InitializeOnGPU();
-
+  okek::TexturedMesh tmesh(tvertices, 4, indices, 2);
   okek::Shader ourShader(PathToBin ,"../Shaders/ColoredMesh.vs",
    "../Shaders/ColoredMesh.fs");
 
 
   for(int i = 0; i < 5; i++)
     mesh.debug1(i);
-
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
