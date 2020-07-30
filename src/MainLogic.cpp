@@ -11,16 +11,11 @@ std::string PathToBin;
 //--------GLOBAL-VARIBALES--------->
 
 void FrameBufferSizeCallBack(GLFWwindow* window, int height, int width)
-{
-    glViewport(0, 0, height, width);
-}  
-
+{ glViewport(0, 0, height, width);  }  
 int main(int argc, char** argv ) 
 {
   //--------------------------------->
   PathToBin = argv[0];
-
-  
   for(int i = PathToBin.length()-1 ; i >= 0; i--)
     if(*(&PathToBin[i]) == '/')
     {
@@ -73,8 +68,6 @@ int main(int argc, char** argv )
   printf("Renderer: %s\n", renderer);
   printf("OpenGL version supported %s\n", version);*/
 
-
-
   // Ensure we can capture the escape key being pressed below
   glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
@@ -119,7 +112,6 @@ int main(int argc, char** argv )
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-
   while(!glfwWindowShouldClose(window)) 
   {
 
@@ -152,7 +144,6 @@ int main(int argc, char** argv )
 
   }
 
-  
   // close GL context and any other GLFW resources
   glfwTerminate();
   return 0;

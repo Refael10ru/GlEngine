@@ -48,8 +48,10 @@ public:
 
     ~VAO() = default;
 
+    //initializes atributes of VBO and Copies EBO/VBO onto the GPU 
     void InitializeOnGPU()
     {
+        // 1. initialize VAO
         glGenVertexArrays(1, &this->VAO_ID);
         glBindVertexArray(VAO_ID);
         // 2. copy our vertices array in a vertex buffer for OpenGL to use
@@ -57,31 +59,29 @@ public:
         glBindBuffer(GL_ARRAY_BUFFER, VBO_ID);
         glBufferData(GL_ARRAY_BUFFER, this->GetVBOSize() , this->GetVBOP(), GL_STATIC_DRAW);
 
+        // 3. initialize memory layot of VBO
         SetAtributes();
 
-        // 3. copy our index array in a element buffer for OpenGL to use
+        // 4. copy our index array in a element buffer for OpenGL to use
         glGenBuffers(1, &this->EBO_ID);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_ID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->GetEBOSize() , this->GetEBOP(), GL_STATIC_DRAW); 
-        //std::cout << "size of VBO is "<< this->VBO.size() << "\n";
         
     }
 
-    virtual void SetAtributes()
-    {
-        std::cout << "ERROR! YOU DIDNT OVERIDE SetAtributes() ";
-    }
+    //must rewrite this function before when inheriting
+    //this func initializes memory layot of VBO!
+    virtual void SetAtributes() = 0;
 
     inline void use()
-    {
-        glBindVertexArray(VAO_ID);
-    }
+    { glBindVertexArray(VAO_ID); }
+
     //copyes VBO Vector
-    void SetVBO(std::vector<T> Target)
+    inline void SetVBO(std::vector<T> Target)
     { this->VBO = Target; }
 
     //copyes EBO Vector
-    void SetEBO(std::vector<CtriangleOffsets> Target)
+    inline void SetEBO(std::vector<CtriangleOffsets> Target)
     { this->EBO = Target; }
 
 
@@ -101,14 +101,6 @@ public:
     inline unsigned long int GetEBOSize()
     { return this->EBO.size()*sizeof(CtriangleOffsets); }
 
-    //----------------------------->
-
-    //copys EBO/VBO to GPU
-    virtual void CopyToGPU()
-    { std::cout << "CopingVAO!\n";}
-
-
-    //----------------------------->
 protected:  
 
     //ID of VAO in openGL (if on GPU)
