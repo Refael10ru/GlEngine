@@ -1,8 +1,7 @@
 #ifndef _COLOREDMESH_
 #define _COLOREDMESH_
-#include "shaders.h"
+
 #include "VAO.h"
-#include <cstring>
 #include <iostream>
 #include <vector>
 
@@ -14,53 +13,24 @@ namespace okek
     public:
         Cvec3 position;
         Color color;
-        ColoredCPoint() = default;
-        ColoredCPoint(float* Target);
     };
 
-    class ColoredMesh
+    class ColoredMesh : public VAO<ColoredCPoint>
     {
     public:
-        ColoredMesh() = default;
+        using VAO::VAO;
 
-        //move costructor
-        ColoredMesh(ColoredMesh*);
-        //copy constructor
-        ColoredMesh(ColoredMesh&);
+        void debug1(int i);
 
-        //this is a copy constructor
-        //sizeVertices = sum of points
-        //sizeIndices = sum of triangles
-        ColoredMesh(float vertices[],int sizeVertices,
-        unsigned int indices[], int sizeIndices);
-
-        ~ColoredMesh();
-
-        void SetIndices(unsigned int indices[], int sizeIndices);
-        //dont use of indices on stack
-        void SetIndices(std::vector<CtriangleOffsets> Target);
-        
-        void Setpoints(float vertices[],int sizeVertices);
-
-        void SetPoints(std::vector<ColoredCPoint> Target);
-        //retreves pointer to "meshpoints"
-        ColoredCPoint* GetPointsP();
-        CtriangleOffsets* GetIndicesP();
-
-
-        unsigned long int GetPointsSize();
-        unsigned long int GetIndicesSize();
-    
-        
-    protected:  
-         //a vector of indices
-        std::vector<CtriangleOffsets> indices;
-
-        //a vector of ColoredMesh
-        std::vector<ColoredCPoint> points;
-
-        void debug(int a);
-
+        virtual void SetAtributes() override
+        {
+        // position attribute
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(okek::ColoredCPoint), (void*)0);
+        glEnableVertexAttribArray(0);
+        // color attribute
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(okek::ColoredCPoint), (void*)(3* sizeof(float)));
+        glEnableVertexAttribArray(1);
+        }
     };
 
 };

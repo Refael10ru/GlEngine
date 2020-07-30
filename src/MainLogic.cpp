@@ -2,14 +2,23 @@
 #include <stdio.h>
 #include <cmath>
 #include "ColoredMesh.h"
-
 #include "TexturedMesh.h"
+
+//--------GLOBAL-VARIBALES--------->
+
+std::string PathToBin;
+
+//--------GLOBAL-VARIBALES--------->
+
+void FrameBufferSizeCallBack(GLFWwindow* window, int height, int width)
+{
+    glViewport(0, 0, height, width);
+}  
 
 int main(int argc, char** argv ) 
 {
-  //---------------------------->
-  std::string PathToBin(argv[0]);
-  //---------------------------->
+  //--------------------------------->
+  PathToBin = argv[0];
 
   
   for(int i = PathToBin.length()-1 ; i >= 0; i--)
@@ -18,6 +27,9 @@ int main(int argc, char** argv )
       PathToBin.resize(i+1);
       break;
     }
+  //--------------------------------->
+  
+  //Writes program params for testing
   std::cout << "Program args:" << argc << "\n";
   for(int i = 0; i < argc; i++)
     std::cout << argv[i] << "\n";
@@ -40,8 +52,10 @@ int main(int argc, char** argv )
     glfwTerminate();
     return 1;
   }
-  glfwMakeContextCurrent(window);
 
+  glfwSetFramebufferSizeCallback(window, FrameBufferSizeCallBack);
+
+  glfwMakeContextCurrent(window);
 
   // start GLEW extension handler
   glewExperimental = GL_TRUE;
@@ -65,16 +79,14 @@ int main(int argc, char** argv )
   glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
 
-
-
   float ColoredVertices[] = {
     // positions         // colors
      1.0f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
     -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
      0.5f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   // top 
     -0.5f,  0.5f, 0.0f,  0.5f, 0.5f, 0.5f,
-     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,
-     0.0f,  1.0f, 0.0f,  0.0f, 0.0f, 1.0f  
+     0.0f,  1.0f, 0.0f,  0.0f, 1.0f, 1.0f,
+     1.0f,  1.0f, 0.0f,  0.0f, 0.0f, 1.0f  
   };    
   float vertices[] = {
      0.5f,  0.5f, 0.0f,  // top right
@@ -85,46 +97,27 @@ int main(int argc, char** argv )
   unsigned int indices[] = {  // note that we start from 0!
     0, 1, 2,   // first triangle
     1, 2, 3,   // second triangle
-    2, 3, 4,
-    2, 3, 4
+    2, 3, 4,   // third triangle
+    2, 3, 4    // forth triangle
   }; 
+  float texCoords[] = {
+    0.0f, 0.0f,  // lower-left corner  
+    1.0f, 0.0f,  // lower-right corner
+    0.5f, 1.0f   // top-center corner
+  };
   
-  okek::ColoredMesh mesh(ColoredVertices ,6 ,indices, 4);
+  okek::ColoredMesh mesh(ColoredVertices ,5 ,indices, 3);
+  mesh.InitializeOnGPU();
+
   okek::Shader ourShader(PathToBin ,"../Shaders/ColoredMesh.vs",
    "../Shaders/ColoredMesh.fs");
-  okek::VAO<okek::TexturedMesh> ree;
-  okek::TexturedMesh oke = okek::TexturedMesh();
-  oke.CopyToGPU();
 
-  //------------------------------------->
-  // ..:: Initialization code ::..
-  // 1. bind Vertex Array Object
-  GLuint VAO = 0;
-  glGenVertexArrays(1, &VAO);
-  glBindVertexArray(VAO);
-  // 2. copy our vertices array in a vertex buffer for OpenGL to use
-  GLuint VBO;
-  glGenBuffers(1, &VBO);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, mesh.GetPointsSize(), mesh.GetPointsP(), GL_STATIC_DRAW);
 
-  // position attribute
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(okek::ColoredCPoint), (void*)0);
-  glEnableVertexAttribArray(0);
-  // color attribute
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(okek::ColoredCPoint), (void*)(3* sizeof(float)));
-  glEnableVertexAttribArray(1);
+  for(int i = 0; i < 5; i++)
+    mesh.debug1(i);
 
-  // 3. copy our index array in a element buffer for OpenGL to use
-  GLuint EBO;
-  glGenBuffers(1, &EBO);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.GetIndicesSize(), mesh.GetIndicesP(), GL_STATIC_DRAW); 
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-
-
 
 
   while(!glfwWindowShouldClose(window)) 
@@ -149,8 +142,9 @@ int main(int argc, char** argv )
     ourShader.setfvec3("inputColor", redValue, greenValue, blueValue);
 
     // now render the triangle
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    //glBindVertexArray(VAO);
+    mesh.use();
+    glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
   
     // swap buffers and poll IO events
     glfwSwapBuffers(window);

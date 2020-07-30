@@ -5,7 +5,9 @@ namespace okek
 {
     struct Cvec3
     {
-        float dir[3];
+        float x;
+        float y;
+        float z;
     };
 
     struct TextureCord
@@ -20,7 +22,7 @@ namespace okek
     struct TexturedCPoint
     {
         Cvec3 position;
-        TextureCord cord;
+        TextureCord texturecord;
     };
 
     struct Ctriangle
@@ -38,13 +40,6 @@ namespace okek
         Cvec3 points[];
     };
 
-    struct TexturedCPoints
-    {
-        //true if on heap
-        bool heap;
-        int sizeqwords;
-        TexturedCPoint points[];
-    };
 
     class CtriangleOffsets
     {   
@@ -55,10 +50,7 @@ namespace okek
     class vec3
     {
     public:
-        vec3() = default;
 
-        //be aware that the size is not checked!
-        vec3(float*);
         //geter for stored var
         Cvec3 get();
     protected:
