@@ -119,11 +119,10 @@ float tvertices[] = {
   okek::Shader TexturedmeshS(PathToBin ,"../Shaders/TexturedMesh.vs",
    "../Shaders/TexturedMesh.fs");
 
-  okek::Texture2D texture(PathToBin , "../resources/container.jpg");
-  texture.MoveToGPU();
-
-
-
+  okek::Texture2D texture1(PathToBin , "../resources/container.jpg", GL_RGB);
+  texture1.MoveToGPU();
+  okek::Texture2D texture2(PathToBin , "../resources/awesomeface.png", GL_RGBA);
+  texture2.MoveToGPU();
 
   for(int i = 0; i < 5; i++)
     mesh.debug1(i);
@@ -155,9 +154,12 @@ float tvertices[] = {
     //ColoredmeshS.use();
     //glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
 
-    ColoredmeshS.use();
-    texture.use();
+
+    texture1.use(0);
+    texture2.use(1);
     TexturedmeshS.use();
+    TexturedmeshS.setInt("texture1", 0);
+    TexturedmeshS.setInt("texture2", 1);
     tmesh.use();
     glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
 
