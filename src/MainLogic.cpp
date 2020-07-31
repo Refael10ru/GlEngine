@@ -1,8 +1,12 @@
 
 #include <stdio.h>
 #include <cmath>
+#include "shaders.h"
 #include "ColoredMesh.h"
 #include "TexturedMesh.h"
+#include <GLFW/glfw3.h> // GLFW helper library
+
+#include "Texture2D.h"
 
 //--------GLOBAL-VARIBALES--------->
 
@@ -12,6 +16,7 @@ std::string PathToBin;
 
 void FrameBufferSizeCallBack(GLFWwindow* window, int height, int width)
 { glViewport(0, 0, height, width);  }  
+
 int main(int argc, char** argv ) 
 {
   //--------------------------------->
@@ -89,9 +94,9 @@ int main(int argc, char** argv )
   };
   unsigned int indices[] = {  // note that we start from 0!
     0, 1, 2,   // first triangle
-    1, 2, 3,   // second triangle
+    0, 2, 3,   // second triangle
     2, 3, 4,   // third triangle
-    2, 3, 4    // forth triangle
+    2, 4, 5    // forth triangle
   }; 
 float tvertices[] = {
     // positions          // colors           // texture coords
@@ -101,11 +106,23 @@ float tvertices[] = {
     -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
 };
   
-  okek::ColoredMesh mesh(ColoredVertices ,5 ,indices, 3);
+  okek::ColoredMesh mesh(ColoredVertices ,6 ,indices, 4);
   mesh.InitializeOnGPU();
   okek::TexturedMesh tmesh(tvertices, 4, indices, 2);
-  okek::Shader ourShader(PathToBin ,"../Shaders/ColoredMesh.vs",
+  tmesh.InitializeOnGPU();
+
+  
+
+  okek::Shader ColoredmeshS(PathToBin ,"../Shaders/ColoredMesh.vs",
    "../Shaders/ColoredMesh.fs");
+
+  okek::Shader TexturedmeshS(PathToBin ,"../Shaders/TexturedMesh.vs",
+   "../Shaders/TexturedMesh.fs");
+
+  okek::Texture2D texture(PathToBin , "../resources/container.jpg");
+  texture.MoveToGPU();
+
+
 
 
   for(int i = 0; i < 5; i++)
@@ -124,7 +141,6 @@ float tvertices[] = {
     // be sure to activate the shader
     //glUseProgram(shaderProgram);
 
-    ourShader.use();
   
     // update the uniform color
     float timeValue = glfwGetTime();
@@ -132,12 +148,19 @@ float tvertices[] = {
     float greenValue = sin(timeValue+1) / 2.0f + 0.5f;
     float blueValue = sin(timeValue+2) / 2.0f + 0.5f;
 
-    ourShader.setfvec3("inputColor", redValue, greenValue, blueValue);
+    ColoredmeshS.setfvec3("inputColor", redValue, greenValue, blueValue);
 
-    // now render the triangle
-    //glBindVertexArray(VAO);
-    mesh.use();
-    glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
+
+    //mesh.use();
+    //ColoredmeshS.use();
+    //glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
+
+    ColoredmeshS.use();
+    texture.use();
+    TexturedmeshS.use();
+    tmesh.use();
+    glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
+
   
     // swap buffers and poll IO events
     glfwSwapBuffers(window);
@@ -148,4 +171,4 @@ float tvertices[] = {
   // close GL context and any other GLFW resources
   glfwTerminate();
   return 0;
-}
+};

@@ -1,7 +1,6 @@
 
-
-#include <iostream>
 #include "TexturedMesh.h"
+
 namespace okek
 {
     void TexturedMesh::PrintVBO(int i)
