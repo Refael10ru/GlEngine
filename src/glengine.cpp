@@ -3,3 +3,11 @@
 main() 
 {
 }
+
+namespace GLEngine
+{
+    void Window::SwapBuffer()
+    {
+        glfwSwapBuffers(this->GLEwindow);
+    }
+}

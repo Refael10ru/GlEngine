@@ -14,4 +14,6 @@ headers:
 clear:
 	rm gltest include/*.gch a.out
 
+test:	 
+	g++  src/testfile.cpp -g -Iinclude -lGL -lGLU -lglfw -lGLEW -o bin/test
 $(ObjectFile)%.o: $(SourceFiles)%.ppp 
