@@ -11,7 +11,7 @@ namespace okek
     class ColoredCPoint
     {
     public:
-        Cvec3 position;
+        glm::vec3 position;
         Color color;
     };
 

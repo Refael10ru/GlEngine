@@ -1,21 +1,31 @@
 
-#include <stdio.h>
-#include <cmath>
+
 #include "shaders.h"
 #include "ColoredMesh.h"
 #include "TexturedMesh.h"
+#include "Texture2D.h"
+#include "TexturedOBJ.h"
+
+#include <string>
+#include <cmath>
+#include <vector>
+
 #include <GLFW/glfw3.h> // GLFW helper library
 
-#include "Texture2D.h"
+#define PI 3.141592f
+//#include "inputs.cpp"
 
 //--------GLOBAL-VARIBALES--------->
 
+glm::mat4 projection;
+int Width = 600;
+int Height = 480;
 std::string PathToBin;
 
 //--------GLOBAL-VARIBALES--------->
 
-void FrameBufferSizeCallBack(GLFWwindow* window, int height, int width)
-{ glViewport(0, 0, height, width);  }  
+void FrameBufferSizeCallBack(GLFWwindow* window, int width, int height)
+{ glViewport(0, 0, width, height );Width = width;Height = height;  }  
 
 int main(int argc, char** argv ) 
 {
@@ -46,7 +56,7 @@ int main(int argc, char** argv )
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  GLFWwindow* window = glfwCreateWindow(640, 480, "GLEngine", NULL, NULL);
+  GLFWwindow* window = glfwCreateWindow(Width, Height, "GLEngine", NULL, NULL);
   if (!window) {
     fprintf(stderr, "ERROR: could not open window with GLFW3\n");
     glfwTerminate();
@@ -76,45 +86,83 @@ int main(int argc, char** argv )
   // Ensure we can capture the escape key being pressed below
   glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-
-  float ColoredVertices[] = {
-    // positions         // colors
-     1.0f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-     0.5f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   // top 
-    -0.5f,  0.5f, 0.0f,  0.5f, 0.5f, 0.5f,
-     0.0f,  1.0f, 0.0f,  0.0f, 1.0f, 1.0f,
-     1.0f,  1.0f, 0.0f,  0.0f, 0.0f, 1.0f  
-  };    
   float vertices[] = {
-     0.5f,  0.5f, 0.0f,  // top right
-     0.5f, -0.5f, 0.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f,  // bottom left
-    -0.5f,  0.5f, 0.0f   // top left 
-  };
-  unsigned int indices[] = {  // note that we start from 0!
-    0, 1, 2,   // first triangle
-    0, 2, 3,   // second triangle
-    2, 3, 4,   // third triangle
-    2, 4, 5    // forth triangle
-  }; 
-float tvertices[] = {
-    // positions          // colors           // texture coords
-     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 };
+
+
+  unsigned int indices[] = {  // note that we start from 0!
+    0, 1, 2,  
+    3, 4, 5,
+    6, 7, 8,
+    9,10,11,
+    12,13,14,
+    15,16,17,
+    18,19,20,
+    21,22,23,
+    24,25,26,
+    27,28,29,
+    30,31,32,
+    33,34,35
+  }; 
+
+  glm::vec3 cubePositions[] = {
+    glm::vec3( 0.0f,  0.0f,  0.0f), 
+    glm::vec3( 2.0f,  5.0f, -15.0f), 
+    glm::vec3(-1.5f, -2.2f, -2.5f),  
+    glm::vec3(-3.8f, -2.0f, -12.3f),  
+    glm::vec3( 2.4f, -0.4f, -3.5f),  
+    glm::vec3(-1.7f,  3.0f, -7.5f),  
+    glm::vec3( 1.3f, -2.0f, -2.5f),  
+    glm::vec3( 1.5f,  2.0f, -2.5f), 
+    glm::vec3( 1.5f,  0.2f, -1.5f), 
+    glm::vec3(-1.3f,  1.0f, -1.5f)  
+  };
   
-  okek::ColoredMesh mesh(ColoredVertices ,6 ,indices, 4);
-  mesh.InitializeOnGPU();
-  okek::TexturedMesh tmesh(tvertices, 4, indices, 2);
+  okek::OTexturedMesh tmesh(vertices, 36, indices, 12);
   tmesh.InitializeOnGPU();
 
   
-
-  okek::Shader ColoredmeshS(PathToBin ,"../Shaders/ColoredMesh.vs",
-   "../Shaders/ColoredMesh.fs");
 
   okek::Shader TexturedmeshS(PathToBin ,"../Shaders/TexturedMesh.vs",
    "../Shaders/TexturedMesh.fs");
@@ -124,10 +172,26 @@ float tvertices[] = {
   okek::Texture2D texture2(PathToBin , "../resources/awesomeface.png", GL_RGBA);
   texture2.MoveToGPU();
 
-  for(int i = 0; i < 5; i++)
-    mesh.debug1(i);
+  //-------------------------------------------------->
+  okek::TexturedOBJ obj = okek::TexturedOBJ(&TexturedmeshS, &texture1, &tmesh
+  ,0,0,0,0,0);
+  //-------------------------------------------------->
+
+  std::vector<okek::TexturedOBJ> vecOBJ = std::vector<okek::TexturedOBJ>();
+
+  for(unsigned int i = 0; i < 10; i++)
+  {
+    //glm::mat4 model = glm::mat4(1.0f);
+    //model = glm::translate(model, cubePositions[i]);
+    //float angle = 20.0f * i; 
+    //model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+
+    vecOBJ.push_back(okek::TexturedOBJ(&TexturedmeshS, &texture1, &tmesh, cubePositions[i]));
+    
+  }
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  glEnable(GL_DEPTH_TEST); 
 
   while(!glfwWindowShouldClose(window)) 
   {
@@ -135,35 +199,54 @@ float tvertices[] = {
     // render
     // clear the colorbuffer
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // be sure to activate the shader
     //glUseProgram(shaderProgram);
 
-  
-    // update the uniform color
-    float timeValue = glfwGetTime();
-    float redValue = sin(timeValue) / 2.0f + 0.5f;
-    float greenValue = sin(timeValue+1) / 2.0f + 0.5f;
-    float blueValue = sin(timeValue+2) / 2.0f + 0.5f;
-
-    ColoredmeshS.setfvec3("inputColor", redValue, greenValue, blueValue);
-
-
-    //mesh.use();
-    //ColoredmeshS.use();
-    //glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
-
-
-    texture1.use(0);
-    texture2.use(1);
     TexturedmeshS.use();
+    texture1.use(1);
+    texture2.use(0);
+
+    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 view = glm::mat4(1.0f);
+    //model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); 
+    
+    //model = obj.GetTMatrix();
+    // note that we're translating the scene in the reverse direction of where we want to move
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -4.0f)); 
+    //Height / (float)Width
+    projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
+    model = glm::rotate(model, (float)glfwGetTime() * glm::radians(20.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    model = glm::rotate(model, (float)glfwGetTime() * glm::radians(30.0f), glm::vec3(1.0f, 1.0f, 0.0f));
     TexturedmeshS.setInt("texture1", 0);
     TexturedmeshS.setInt("texture2", 1);
-    tmesh.use();
-    glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
 
-  
+
+    
+    TexturedmeshS.setMat4f("view", view);
+    TexturedmeshS.setMat4f("projection", projection);
+    //TexturedmeshS.setMat4f("model", model);
+    for(unsigned int i = 0; i < vecOBJ.size(); i++)
+    {
+      float angle = 20.0f * i; 
+      glm::mat4 model = vecOBJ[i].GetTMatrix();
+      if(i%3!=0)
+      {
+      angle +=  glm::radians((float)glfwGetTime() *3000.0f);
+      }
+      else
+      {
+      angle +=  glm::radians((float)glfwGetTime() *1500.0f);
+      }
+      
+      model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+      TexturedmeshS.setMat4f("model", model);
+
+      glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    }
+
+
     // swap buffers and poll IO events
     glfwSwapBuffers(window);
     glfwPollEvents();

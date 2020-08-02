@@ -85,9 +85,12 @@ namespace okek
     void Shader::setfvec3(const std::string &name, float value,float value2,float value3) const
     { glUniform3f(glGetUniformLocation(ID, name.c_str()), value, value2, value3 ); }
 
-    void Shader::setfvec3(const std::string &name, Cvec3 values) const
+    void Shader::setfvec3(const std::string &name, glm::vec3 values) const
     { glUniform3f(glGetUniformLocation(ID, name.c_str()), values.x, values.y, values.z ); }
 
     void Shader::setfvec4(const std::string &name, float value, float value2, float value3, float value4) const
     { glUniform4f(glGetUniformLocation(ID, name.c_str()), value, value2, value3, value4); }
+
+    void Shader::setMat4f(const std::string &name, glm::mat4& matrix)
+    { glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix)); }
 };

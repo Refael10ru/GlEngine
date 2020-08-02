@@ -2,11 +2,10 @@
 #define _SHADERS_
 
 #include <string>
-
-#include <GL/glew.h> // include GLEW and new version of GL on Windows
-#include <GLFW/glfw3.h> // GLFW helper library
-#include <iostream>
 #include "typedef.h"
+#include <GL/glew.h> // include GLEW and new version of GL on Windows
+#include <iostream>
+
   
 namespace okek
 {
@@ -26,9 +25,11 @@ namespace okek
         void setfvec2(const std::string &name, float value, float value2) const;
 
         void setfvec3(const std::string &name, float value, float value2, float value3) const;
-        void setfvec3(const std::string &name, Cvec3 values) const;
+        void setfvec3(const std::string &name, glm::vec3 values) const;
         
         void setfvec4(const std::string &name, float value, float value2, float value3, float value4) const;
+
+        void setMat4f(const std::string &name, glm::mat4& matrix);
     protected:
         std::string PathToBin;
     };

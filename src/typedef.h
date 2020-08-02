@@ -1,14 +1,13 @@
 #ifndef _TYPEDEF_
 #define _TYPEDEF_
 
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 namespace okek
 {
-    struct Cvec3
-    {
-        float x;
-        float y;
-        float z;
-    };
 
     struct TextureCord
     {
@@ -19,24 +18,6 @@ namespace okek
         float R, G, B;
     };    
 
-
-
-    struct Ctriangle
-    {
-        float dir[9];
-    };
-
-    //represents a group of points in space
-    //can be looked at as a frame of a 3d animation
-    struct Cpoints
-    {
-        //true if on heap
-        bool heap;
-        int sizeqwords;
-        Cvec3 points[];
-    };
-
-
     class CtriangleOffsets
     {   
     public:
@@ -44,23 +25,6 @@ namespace okek
     };
 
 
-    class triangle
-    {
-    public:
-        triangle() = default;
-
-        //be aware that the size is not checked!
-        triangle(float*);
-        
-        Ctriangle get();
-
-        //should be used only on funtions from opengl
-        float* getp();
-
-
-    protected:
-        Ctriangle tri;
-    };
 
 
 };
