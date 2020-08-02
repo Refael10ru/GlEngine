@@ -5,24 +5,45 @@
 #include "TexturedMesh.h"
 #include "Texture2D.h"
 #include "TexturedOBJ.h"
+#include "camera.h"
 
 #include <string>
 #include <cmath>
 #include <vector>
 
-#include <GLFW/glfw3.h> // GLFW helper library
-
 #define PI 3.141592f
-//#include "inputs.cpp"
 
 //--------GLOBAL-VARIBALES--------->
 
+okek::camera player = okek::camera(glm::vec3(0,0,4));
 glm::mat4 projection;
 int Width = 600;
 int Height = 480;
 std::string PathToBin;
+float deltaTime = 0.0f;	// Time between current frame and last frame
+float lastFrame = 0;
 
 //--------GLOBAL-VARIBALES--------->
+
+void ProcessInputHandle(GLFWwindow* window)
+{ 
+  
+  float cameraSpeed = 4.5f * deltaTime;
+  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+      player.position += cameraSpeed * player.rotation;
+  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+      player.position -= cameraSpeed * player.rotation;
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+      player.position -= glm::normalize(glm::cross(player.rotation, player.up)) * cameraSpeed;
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+      player.position += glm::normalize(glm::cross(player.rotation, player.up)) * cameraSpeed;
+
+  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+      glfwSetWindowShouldClose(window, true);
+
+  
+  
+}
 
 void FrameBufferSizeCallBack(GLFWwindow* window, int width, int height)
 { glViewport(0, 0, width, height );Width = width;Height = height;  }  
@@ -65,6 +86,10 @@ int main(int argc, char** argv )
 
   glfwSetFramebufferSizeCallback(window, FrameBufferSizeCallBack);
 
+  //glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+
+  //glfwSetKeyCallback(window, ProcessInputHandle);
+
   glfwMakeContextCurrent(window);
 
   // start GLEW extension handler
@@ -84,7 +109,7 @@ int main(int argc, char** argv )
   printf("OpenGL version supported %s\n", version);*/
 
   // Ensure we can capture the escape key being pressed below
-  glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+  
 
   float vertices[] = {
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -131,6 +156,7 @@ int main(int argc, char** argv )
 };
 
 
+
   unsigned int indices[] = {  // note that we start from 0!
     0, 1, 2,  
     3, 4, 5,
@@ -146,7 +172,7 @@ int main(int argc, char** argv )
     33,34,35
   }; 
 
-  glm::vec3 cubePositions[] = {
+  glm::vec3 cubepositions[] = {
     glm::vec3( 0.0f,  0.0f,  0.0f), 
     glm::vec3( 2.0f,  5.0f, -15.0f), 
     glm::vec3(-1.5f, -2.2f, -2.5f),  
@@ -173,8 +199,7 @@ int main(int argc, char** argv )
   texture2.MoveToGPU();
 
   //-------------------------------------------------->
-  okek::TexturedOBJ obj = okek::TexturedOBJ(&TexturedmeshS, &texture1, &tmesh
-  ,0,0,0,0,0);
+  okek::TexturedOBJ obj = okek::TexturedOBJ(&TexturedmeshS, &texture1, &tmesh);
   //-------------------------------------------------->
 
   std::vector<okek::TexturedOBJ> vecOBJ = std::vector<okek::TexturedOBJ>();
@@ -182,11 +207,11 @@ int main(int argc, char** argv )
   for(unsigned int i = 0; i < 10; i++)
   {
     //glm::mat4 model = glm::mat4(1.0f);
-    //model = glm::translate(model, cubePositions[i]);
+    //model = glm::translate(model, cubeplayer.positions[i]);
     //float angle = 20.0f * i; 
     //model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
-    vecOBJ.push_back(okek::TexturedOBJ(&TexturedmeshS, &texture1, &tmesh, cubePositions[i]));
+    vecOBJ.push_back(okek::TexturedOBJ(&TexturedmeshS, &texture1, &tmesh, cubepositions[i]));
     
   }
 
@@ -214,7 +239,8 @@ int main(int argc, char** argv )
     
     //model = obj.GetTMatrix();
     // note that we're translating the scene in the reverse direction of where we want to move
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -4.0f)); 
+    //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -4.0f));
+    view = player.GetMatrix(); 
     //Height / (float)Width
     projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
     model = glm::rotate(model, (float)glfwGetTime() * glm::radians(20.0f), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -222,7 +248,10 @@ int main(int argc, char** argv )
     TexturedmeshS.setInt("texture1", 0);
     TexturedmeshS.setInt("texture2", 1);
 
-
+    const float radius = 10.0f;
+    float camX = sin(glfwGetTime()) * radius;
+    float camZ = cos(glfwGetTime()) * radius;
+    //view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
     
     TexturedmeshS.setMat4f("view", view);
     TexturedmeshS.setMat4f("projection", projection);
@@ -233,27 +262,31 @@ int main(int argc, char** argv )
       glm::mat4 model = vecOBJ[i].GetTMatrix();
       if(i%3!=0)
       {
-      angle +=  glm::radians((float)glfwGetTime() *3000.0f);
+      angle +=  (float)glfwGetTime() *60.0f;
       }
       else
       {
-      angle +=  glm::radians((float)glfwGetTime() *1500.0f);
+      angle +=  (float)glfwGetTime() *40.0f;
       }
       
       model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
       TexturedmeshS.setMat4f("model", model);
 
       glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        
     }
-
+      float currentFrame = glfwGetTime(); 
+      deltaTime = currentFrame - lastFrame;
+      lastFrame = currentFrame; 
 
     // swap buffers and poll IO events
     glfwSwapBuffers(window);
     glfwPollEvents();
+    ProcessInputHandle(window);
 
   }
-
-  // close GL context and any other GLFW resources
   glfwTerminate();
   return 0;
+  
+  // close GL context and any other GLFW resources
 };

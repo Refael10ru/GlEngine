@@ -1,4 +1,7 @@
 
+#ifndef _OBJECT_
+#define _OBJECT_
+
 #include "shaders.h"
 #include "Texture2D.h"
 #include "VAO.h"
@@ -81,3 +84,5 @@ public:
     Shader *shader;
     };
 };
+
+#endif
