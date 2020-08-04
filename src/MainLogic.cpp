@@ -5,7 +5,8 @@
 #include "TexturedMesh.h"
 #include "Texture2D.h"
 #include "TexturedOBJ.h"
-#include "camera.h"
+#include "Camera.h"
+#include "Window.h"
 
 #include <string>
 #include <cmath>
@@ -15,28 +16,29 @@
 
 //--------GLOBAL-VARIBALES--------->
 
-okek::camera player = okek::camera(glm::vec3(0,0,4));
-glm::mat4 projection;
+
 int Width = 600;
 int Height = 480;
 std::string PathToBin;
 float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0;
-
+okek::Camera player = okek::Camera(glm::vec3(0,0,4));
 //--------GLOBAL-VARIBALES--------->
+
+
 
 void ProcessInputHandle(GLFWwindow* window)
 { 
   
   float cameraSpeed = 4.5f * deltaTime;
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-      player.position += cameraSpeed * player.rotation;
+      player.position += cameraSpeed * player.Front;
   if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-      player.position -= cameraSpeed * player.rotation;
+      player.position -= cameraSpeed * player.Front;
   if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-      player.position -= glm::normalize(glm::cross(player.rotation, player.up)) * cameraSpeed;
+      player.position -= glm::normalize(glm::cross(player.Front, player.WorldUp)) * cameraSpeed;
   if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-      player.position += glm::normalize(glm::cross(player.rotation, player.up)) * cameraSpeed;
+      player.position += glm::normalize(glm::cross(player.Front, player.WorldUp)) * cameraSpeed;
 
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
       glfwSetWindowShouldClose(window, true);
@@ -50,7 +52,28 @@ void FrameBufferSizeCallBack(GLFWwindow* window, int width, int height)
 
 int main(int argc, char** argv ) 
 {
-  //--------------------------------->
+  
+
+  // start GL context and O/S window using the GLFW helper library
+  if (!glfwInit()) {
+    fprintf(stderr, "ERROR: could not start GLFW3\n");
+    return 1;
+  } 
+
+  // these make Apple OS X happy
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  
+  okek::Window MainWindow(PathToBin, &player);
+ /*
+  // get version info
+  const GLubyte* renderer = glGetString(GL_RENDERER); // get renderer string
+  const GLubyte* version = glGetString(GL_VERSION); // version as a string
+  printf("Renderer: %s\n", renderer);
+  printf("OpenGL version supported %s\n", version);*/
+
   PathToBin = argv[0];
   for(int i = PathToBin.length()-1 ; i >= 0; i--)
     if(*(&PathToBin[i]) == '/')
@@ -65,33 +88,6 @@ int main(int argc, char** argv )
   for(int i = 0; i < argc; i++)
     std::cout << argv[i] << "\n";
 
-  // start GL context and O/S window using the GLFW helper library
-  if (!glfwInit()) {
-    fprintf(stderr, "ERROR: could not start GLFW3\n");
-    return 1;
-  } 
-
-  // these make Apple OS X happy
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-  GLFWwindow* window = glfwCreateWindow(Width, Height, "GLEngine", NULL, NULL);
-  if (!window) {
-    fprintf(stderr, "ERROR: could not open window with GLFW3\n");
-    glfwTerminate();
-    return 1;
-  }
-
-  glfwSetFramebufferSizeCallback(window, FrameBufferSizeCallBack);
-
-  //glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-
-  //glfwSetKeyCallback(window, ProcessInputHandle);
-
-  glfwMakeContextCurrent(window);
-
   // start GLEW extension handler
   glewExperimental = GL_TRUE;
   if (glewInit() != GLEW_OK) {
@@ -100,15 +96,6 @@ int main(int argc, char** argv )
     glfwTerminate();
     return -1;
   }
-
-  /*
-  // get version info
-  const GLubyte* renderer = glGetString(GL_RENDERER); // get renderer string
-  const GLubyte* version = glGetString(GL_VERSION); // version as a string
-  printf("Renderer: %s\n", renderer);
-  printf("OpenGL version supported %s\n", version);*/
-
-  // Ensure we can capture the escape key being pressed below
   
 
   float vertices[] = {
@@ -218,7 +205,7 @@ int main(int argc, char** argv )
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   glEnable(GL_DEPTH_TEST); 
 
-  while(!glfwWindowShouldClose(window)) 
+  while(!glfwWindowShouldClose(MainWindow.window)) 
   {
 
     // render
@@ -237,12 +224,9 @@ int main(int argc, char** argv )
     glm::mat4 view = glm::mat4(1.0f);
     //model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); 
     
-    //model = obj.GetTMatrix();
-    // note that we're translating the scene in the reverse direction of where we want to move
-    //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -4.0f));
     view = player.GetMatrix(); 
     //Height / (float)Width
-    projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(MainWindow.FOV), MainWindow.Width/MainWindow.Height, 0.1f, 100.0f);
     model = glm::rotate(model, (float)glfwGetTime() * glm::radians(20.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     model = glm::rotate(model, (float)glfwGetTime() * glm::radians(30.0f), glm::vec3(1.0f, 1.0f, 0.0f));
     TexturedmeshS.setInt("texture1", 0);
@@ -275,14 +259,12 @@ int main(int argc, char** argv )
       glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         
     }
-      float currentFrame = glfwGetTime(); 
-      deltaTime = currentFrame - lastFrame;
-      lastFrame = currentFrame; 
 
     // swap buffers and poll IO events
-    glfwSwapBuffers(window);
+    glfwSwapBuffers(MainWindow.window);
     glfwPollEvents();
-    ProcessInputHandle(window);
+    MainWindow.InputHandle();
+    //ProcessInputHandle(window);
 
   }
   glfwTerminate();
