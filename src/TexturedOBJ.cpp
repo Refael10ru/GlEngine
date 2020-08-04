@@ -7,8 +7,9 @@ namespace okek
     
 
     TexturedOBJ::TexturedOBJ(TexturedOBJ* obj,
-    glm::vec3 position, glm::vec3 rotation,
-    glm::vec3 center, float size)
+    glm::vec3 position, float size,
+    glm::vec3 rotation,
+    glm::vec3 center)
     {   
         
         this->center = center;
@@ -22,8 +23,9 @@ namespace okek
 
     TexturedOBJ::TexturedOBJ(Shader *shader,
     Texture2D *texture, OTexturedMesh *mesh,
-    glm::vec3 position, glm::vec3 rotation,
-    glm::vec3 center, float size)
+     glm::vec3 position, float size,
+    glm::vec3 rotation,
+    glm::vec3 center)
     {
         this->size = size;
         this->vao = vao;

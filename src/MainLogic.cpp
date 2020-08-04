@@ -16,39 +16,9 @@
 
 //--------GLOBAL-VARIBALES--------->
 
-
-int Width = 600;
-int Height = 480;
-std::string PathToBin;
-float deltaTime = 0.0f;	// Time between current frame and last frame
-float lastFrame = 0;
 okek::Camera player = okek::Camera(glm::vec3(0,0,4));
 //--------GLOBAL-VARIBALES--------->
 
-
-
-void ProcessInputHandle(GLFWwindow* window)
-{ 
-  
-  float cameraSpeed = 4.5f * deltaTime;
-  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-      player.position += cameraSpeed * player.Front;
-  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-      player.position -= cameraSpeed * player.Front;
-  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-      player.position -= glm::normalize(glm::cross(player.Front, player.WorldUp)) * cameraSpeed;
-  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-      player.position += glm::normalize(glm::cross(player.Front, player.WorldUp)) * cameraSpeed;
-
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-      glfwSetWindowShouldClose(window, true);
-
-  
-  
-}
-
-void FrameBufferSizeCallBack(GLFWwindow* window, int width, int height)
-{ glViewport(0, 0, width, height );Width = width;Height = height;  }  
 
 int main(int argc, char** argv ) 
 {
@@ -66,7 +36,7 @@ int main(int argc, char** argv )
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   
-  okek::Window MainWindow(PathToBin, &player);
+  okek::Window MainWindow(argv[0], &player);
  /*
   // get version info
   const GLubyte* renderer = glGetString(GL_RENDERER); // get renderer string
@@ -74,13 +44,6 @@ int main(int argc, char** argv )
   printf("Renderer: %s\n", renderer);
   printf("OpenGL version supported %s\n", version);*/
 
-  PathToBin = argv[0];
-  for(int i = PathToBin.length()-1 ; i >= 0; i--)
-    if(*(&PathToBin[i]) == '/')
-    {
-      PathToBin.resize(i+1);
-      break;
-    }
   //--------------------------------->
   
   //Writes program params for testing
@@ -177,12 +140,12 @@ int main(int argc, char** argv )
 
   
 
-  okek::Shader TexturedmeshS(PathToBin ,"../Shaders/TexturedMesh.vs",
+  okek::Shader TexturedmeshS(MainWindow.PathToBin ,"../Shaders/TexturedMesh.vs",
    "../Shaders/TexturedMesh.fs");
 
-  okek::Texture2D texture1(PathToBin , "../resources/container.jpg", GL_RGB);
+  okek::Texture2D texture1(MainWindow.PathToBin , "../resources/container.jpg", GL_RGB);
   texture1.MoveToGPU();
-  okek::Texture2D texture2(PathToBin , "../resources/awesomeface.png", GL_RGBA);
+  okek::Texture2D texture2(MainWindow.PathToBin , "../resources/awesomeface.png", GL_RGBA);
   texture2.MoveToGPU();
 
   //-------------------------------------------------->
@@ -191,14 +154,14 @@ int main(int argc, char** argv )
 
   std::vector<okek::TexturedOBJ> vecOBJ = std::vector<okek::TexturedOBJ>();
 
-  for(unsigned int i = 0; i < 10; i++)
+  for(int i = 0; i < 10; i++)
   {
     //glm::mat4 model = glm::mat4(1.0f);
     //model = glm::translate(model, cubeplayer.positions[i]);
     //float angle = 20.0f * i; 
     //model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
-    vecOBJ.push_back(okek::TexturedOBJ(&TexturedmeshS, &texture1, &tmesh, cubepositions[i]));
+    vecOBJ.push_back(okek::TexturedOBJ(&TexturedmeshS, &texture1, &tmesh, cubepositions[i],((float)((i*3)%10)/10)+1));
     
   }
 
@@ -255,6 +218,8 @@ int main(int argc, char** argv )
       
       model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
       TexturedmeshS.setMat4f("model", model);
+      TexturedmeshS.setFloat("size",vecOBJ[i].size);
+
 
       glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         

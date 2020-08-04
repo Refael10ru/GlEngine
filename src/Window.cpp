@@ -45,6 +45,7 @@ if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
 Window::Window(std::string pathtobin, Camera* Player,int width,
 int height, int mousesensitivity, float fov)
 {   
+    
     this->FOV = fov;
     this->MouseSensitivity = mousesensitivity;
     this->Width = width;
@@ -52,6 +53,7 @@ int height, int mousesensitivity, float fov)
     this->player = Player;
     this->MouseX = width/2;
     this->MouseY = height/2;
+    this->player->constrainPitch = true;
     for(int i = pathtobin.length()-1 ; i >= 0; i--)
         if(*(&pathtobin[i]) == '/')
         {
@@ -103,10 +105,10 @@ void Window::ProcessMouseMovement(float xpos, float ypos)
         // make sure that when pitch is out of bounds, screen doesn't get flipped
         if (this->player->constrainPitch)
         {
-            if (player->Pitch > 89.0f)
-                player->Pitch = 89.0f;
-            if (player->Pitch < -89.0f)
-                player->Pitch = -89.0f;
+            if (player->Pitch > 890.0f)
+                player->Pitch = 890.0f;
+            if (player->Pitch < -890.0f)
+                player->Pitch = -890.0f;
         }
 
         // update Front, Right and Up Vectors using the updated Euler angles

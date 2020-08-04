@@ -13,14 +13,14 @@ namespace okek
             
         TexturedOBJ(Shader *shader, Texture2D *texture,
         OTexturedMesh *mesh,
-        glm::vec3 position = glm::vec3(0),
+        glm::vec3 position = glm::vec3(0), float size = 1.0f,
         glm::vec3 rotation = glm::vec3(0),
-        glm::vec3 center = glm::vec3(0), float size = 0.0f);
+        glm::vec3 center = glm::vec3(0));
 
         TexturedOBJ(TexturedOBJ* obj,
-        glm::vec3 position = glm::vec3(0),
+        glm::vec3 position = glm::vec3(0), float size = 1.0f,
         glm::vec3 rotation = glm::vec3(0),
-        glm::vec3 center = glm::vec3(0), float size = 0.0f);
+        glm::vec3 center = glm::vec3(0));
 
         inline void use()
         {shader->use();
