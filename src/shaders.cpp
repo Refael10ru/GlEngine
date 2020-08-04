@@ -79,18 +79,18 @@ namespace okek
     void Shader::setFloat(const std::string &name, float value) const
     { glUniform1f(glGetUniformLocation(ID, name.c_str()), value); }
 
-    void Shader::setfvec2(const std::string &name, float value, float value2) const
+    void Shader::setVec2(const std::string &name, float value, float value2) const
     { glUniform2f(glGetUniformLocation(ID, name.c_str()), value, value2); } 
 
-    void Shader::setfvec3(const std::string &name, float value,float value2,float value3) const
+    void Shader::setVec3(const std::string &name, float value,float value2,float value3) const
     { glUniform3f(glGetUniformLocation(ID, name.c_str()), value, value2, value3 ); }
 
-    void Shader::setfvec3(const std::string &name, glm::vec3 values) const
+    void Shader::setVec3(const std::string &name, glm::vec3 values) const
     { glUniform3f(glGetUniformLocation(ID, name.c_str()), values.x, values.y, values.z ); }
 
-    void Shader::setfvec4(const std::string &name, float value, float value2, float value3, float value4) const
+    void Shader::setVec4(const std::string &name, float value, float value2, float value3, float value4) const
     { glUniform4f(glGetUniformLocation(ID, name.c_str()), value, value2, value3, value4); }
 
-    void Shader::setMat4f(const std::string &name, glm::mat4& matrix)
+    void Shader::setMat4(const std::string &name, glm::mat4& matrix)
     { glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix)); }
 };

@@ -35,17 +35,30 @@ PLATFORM		:= linux
 CLEAN_COMMAND 	:= -rm -r $(BIN)/* $(OBJ)/*/*
 LINK_FLAGS		:= 
 
-SOURCES		:= $(wildcard $(SRC)/*.cpp)
-OBJECTS		:= $(patsubst $(SRC)/%,$(OBJ)/$(PLATFORM)/%,$(SOURCES:.cpp=.o))
+#------link file paths pipeline------>
+tmpSRC		= 	$(wildcard $(SRC)/$(1)/*.cpp)
+tmpSRC_O	=	$(tmpSRC:.cpp=.o)
+AddDir		= 	$(patsubst $(SRC)/$(1)/%,$(OBJ)/$(PLATFORM)/%,$(call tmpSRC_O,$(1)))
+#/-----link file paths pipeline------>
+FirstSRC	:= $(wildcard $(SRC)/*.cpp)
+FirstOBJ	:= $(patsubst $(SRC)/%,$(OBJ)/$(PLATFORM)/%,$(FirstSRC:.cpp=.o))
 
+ALLOBJECTS 	:= $(FirstOBJ)
+#to add folders call tmpOBJ with path to file 
+#relative to make file -> $(call tmpOBJ,test)
+ALLOBJECTS 	+= $(call AddDir,test)
 
-# Compile only
+# Compile only. (add compile rules for each dir you added)
+$(OBJ)/$(PLATFORM)%.o : $(SRC)/test/%.cpp $(DEPENDENCIES)
+	$(CXX) $(CXX_FLAGS) $(INC_FLAG) -c -o $@ $<
+
 $(OBJ)/$(PLATFORM)%.o : $(SRC)%.cpp $(DEPENDENCIES)
 	$(CXX) $(CXX_FLAGS) $(INC_FLAG) -c -o $@ $<
 
 
+
 # Link the object files and libraries
-$(BIN)/$(EXECUTABLE) : $(OBJECTS)
+$(BIN)/$(EXECUTABLE) : $(ALLOBJECTS)
 	$(CXX) $^ $(CXX_FLAGS)  -o $(BIN)/$(EXECUTABLE) $(LIBRARIES) $(LIB_FLAG) $(LINK_FLAGS) 
 
 .PHONY: clean clear all

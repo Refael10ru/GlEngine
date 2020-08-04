@@ -2,7 +2,6 @@
 #define _CAMERA_
 
 #include "typedef.h"
-#include "inputs.cpp"
 
 namespace okek 
 {

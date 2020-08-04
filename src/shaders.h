@@ -22,14 +22,14 @@ namespace okek
         void setBool(const std::string &name, bool value) const;  
         void setInt(const std::string &name, int value) const;   
         void setFloat(const std::string &name, float value) const;
-        void setfvec2(const std::string &name, float value, float value2) const;
+        void setVec2(const std::string &name, float value, float value2) const;
 
-        void setfvec3(const std::string &name, float value, float value2, float value3) const;
-        void setfvec3(const std::string &name, glm::vec3 values) const;
+        void setVec3(const std::string &name, float value, float value2, float value3) const;
+        void setVec3(const std::string &name, glm::vec3 values) const;
         
-        void setfvec4(const std::string &name, float value, float value2, float value3, float value4) const;
+        void setVec4(const std::string &name, float value, float value2, float value3, float value4) const;
 
-        void setMat4f(const std::string &name, glm::mat4& matrix);
+        void setMat4(const std::string &name, glm::mat4& matrix);
     protected:
         std::string PathToBin;
     };
