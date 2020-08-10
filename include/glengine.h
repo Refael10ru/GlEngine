@@ -9,12 +9,7 @@
 
 namespace GLEngine 
 {
-	void FrameBufferCallBack(GLFWwindow* window, int width, int height);
-	
-	void FrameBufferCallBack(GLFWwindow* window, int width, int height) 
-	{
-		glViewport(0, 0, width, height);
-	}
+	void FrameBufferSizeCallBack(GLFWwindow* window, int width, int height);	
 	
 	class Window	// stores the config 
 	{
@@ -24,7 +19,7 @@ namespace GLEngine
 		Coordinates2D Dimensions;
 
 		GLFWwindow* GLEwindow;
-
+		
 		Window(Coordinates2D dimensions, char* title) : Dimensions(dimensions), Title(title), GLEwindow(glfwCreateWindow(this->Dimensions.X, this->Dimensions.Y, this->Title, NULL, NULL))
 		{			
 			if (!this->GLEwindow)
@@ -37,7 +32,7 @@ namespace GLEngine
 				glfwTerminate();
 		}
 
-		void SwapBuffer();
+		void SwapBuffers();
 	};
 
 
