@@ -57,8 +57,6 @@ $(OBJ)/$(PLATFORM)%.o : $(SRC)/test/%.cpp $(DEPENDENCIES)
 $(OBJ)/$(PLATFORM)%.o : $(SRC)%.cpp $(DEPENDENCIES)
 	$(CXX) $(CXX_FLAGS) $(INC_FLAG) -c -o $@ $<
 
-
-
 # Link the object files and libraries
 $(BIN)/$(EXECUTABLE) : $(ALLOBJECTS)
 	$(CXX) $^ $(CXX_FLAGS)  -o $(BIN)/$(EXECUTABLE) $(LIBRARIES) $(LIB_FLAG) $(LINK_FLAGS) 

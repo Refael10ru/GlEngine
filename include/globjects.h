@@ -1,92 +1,122 @@
 #pragma once
 
-#define GLOBJECTS_H
+#define GLEOBJECTS_H 
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include <iostream>
 #include <vector>
-#include <stdio.h>
-#include <cstring>
-#include "defaultmacro.h"
-#include "errorhandling.h"
-#include "debug.h"
+#include <stdlib.h>
+#include <GLFW/glfw3.h> 
+#include "gltypes.h"
+#include "globjects.h"
+#include "defaults.h"
+// #include "executiondata.h"
 
 namespace GLEngine
 {
-	class GLETools	//	to be replaced with a better name
-	{
-	public:	
-		enum GLEobject
+	struct Point2D
+	{	
+		int X, Y; 
+
+		Point2D() : X(0), Y(0)
 		{
-			VertexArray, 
-			VertexBuffer
-		};
+		}
 
-		static unsigned int LinkShaders(std::vector<unsigned int> shaders);	//	linkes the shaders respective to the shader ids stroed in the provided std::vector<unsigned int> into one shader program
-	
-		static unsigned int CreateShader(char* ShaderString, GLenum shaderType);	// creates a shader of the specified type and returns its ID
+		Point2D(int x, int y) : X(x), Y(y)
+		{
+		}
 
-		static unsigned int CreateShader(char* ShaderString, GLenum shaderType, bool compile);	// creates a shader of the specified type and returns its ID (compiled/uncompiled depends upon the boolean)
-	
-		static unsigned int CreateObject(GLETools::GLEobject objectType);	//	alllocates the specified glObject and returns it's ID
+		Point2D operator +(const Point2D& rhs)
+		{
+			return Point2D(Point2D(this->X + rhs.X, this->Y + rhs.Y)); 
+		}	
+		
+		Point2D operator -(const Point2D& rhs)
+		{
+			return Point2D(Point2D(this->X - rhs.X, this->Y - rhs.Y)); 
+		}	
+		
+		Point2D operator *(const Point2D& rhs)
+		{
+			return Point2D(Point2D(this->X * rhs.X, this->Y * rhs.Y)); 
+		}	
 
-		static void DeleteShaders(std::vector<unsigned int>);
+		Point2D operator /(const Point2D& rhs)
+		{
+			return Point2D(Point2D(this->X / rhs.X, this->Y / rhs.Y)); 
+		}	
+	}; 
 
-		static void SetVertexAttributePointer(int size);	// sets the vertex attribute pointer of the bound vertex array object
-
-		static void ZeroBind();	//	binds the vertex array and buffer objects with ID 0
-	};
-	
-	class Shader
+	struct Point3D	// Stores a 3D Point
 	{
 	public:
-		enum ShaderType
+		int X, Y, Z; 
+
+		Point3D() : X(0), Y(0), Z(0)
 		{
-			Vertex, 
-			Fragment
-		};
-
-		unsigned int ShaderProgramID;
-
-		std::vector<unsigned int> Shaders;
-
-		char** ShaderStrings;	//	Pointer to the array containing shader strings
-
-		bool Linked;	//	insicates if the shaders are compiled and linked into a shader program 
-
-		bool AttachString(char* shaderString, ShaderType shaderType);	// attaches the shader string to the specified shader
-
-		bool Validate();	// checks if any of the parameters required for a successful compile is null and returns the bool representing the same
-
-		bool Compile();	//	compiles the shaders respective to the shader ids stores in Shader::Shaders
-
-		unsigned int Link();
-
-		Shader() : Shaders({ glCreateShader(GL_VERTEX_SHADER), glCreateShader(GL_FRAGMENT_SHADER) }), ShaderStrings(new char*[2]{ nullptr, nullptr }), Linked(false)
+		}
+		
+		Point3D(int x, int y, int z) : X(x), Y(y), Z(z)
 		{
 		}
 
-		Shader(unsigned int vertex, unsigned int fragment) : Shaders({ vertex, fragment }), ShaderStrings(new char*[2]{ nullptr, nullptr }), Linked(false)	//	todo: construct the ShaderStrings  array, and a complete valid overload of thi	s constuctor
+		Point3D operator +(const Point3D& rhs)
 		{
+			return Point3D(this->X + rhs.X, this->Y + rhs.Y, this->Z + rhs.Z);
+		}
+		
+		Point3D operator -(const Point3D& rhs)
+		{
+			return Point3D(this->X - rhs.X, this->Y - rhs.Y, this->Z - rhs.Z);
+		}
+		
+		Point3D operator *(const Point3D& rhs)
+		{
+			return Point3D(this->X * rhs.X, this->Y * rhs.Y, this->Z * rhs.Z);
 		}
 
-		Shader(unsigned int vertexObj, unsigned int fragmentObj, char* vertexShaderString, char* fragmentShaderString) : Shaders({ vertexObj, fragmentObj }), ShaderStrings(new char*[2]{ vertexShaderString, fragmentShaderString })  
+		Point3D operator /(const Point3D& rhs)
 		{
-			this->Compile();
-			this->ShaderProgramID = this->Link();	// links the shader program
+			return Point3D(this->X / rhs.X, this->Y / rhs.Y, this->Z / rhs.Z);
 		}
+	}; 
 
-		Shader(char* vertexShaderString, char* fragmentShaderString) : Shaders({ glCreateShader(GL_VERTEX_SHADER), glCreateShader(GL_FRAGMENT_SHADER) }), ShaderProgramID(this->Link())	//	creates and compiles the shaders as the resources are available	
-		{
-			Debug::Log("Shader contructor called. ");	
-		}
+	extern String* DefaultStringValues; // = new String[1] {
+		// "New Window"
+	// }; 
 
-		~Shader()
-		{
-			for (int x = 0; x < this->Shaders.size(); x++)
-				glDeleteShader(this->Shaders.at(x));
-
-			printf("\nShader %d deleted.", this->ShaderProgramID);
-		}
+	extern Point2D* DefaultResolutions; // = new Point2D[1] {
+		// Point2D(800, 600)
+	// };
+	
+	enum DefaultStringType
+	{
+		WindowTitleStrings
 	};
+
+	enum DefaultResolutionType
+	{
+		DefaultWindow
+	}; 
+
+	struct Color	// Stores RGB values.
+	{
+		float R, G, B, A; 
+
+		Color() : R(0), G(0), B(0), A(0)
+		{		
+		}
+		
+		Color(float r, float g, float b, float a) : R(r), G(g), B(b), A(0)
+		{
+		}
+
+		Color(float r, float g, float b) : R(r), G(g), B(b)
+		{
+		}
+	}; 
+
+	// Contains data about a window.
 }
+
+// std::vector<GLEngine::Window*> AllocatedWindows = std::vector<GLEngine::Window*>();	// Execution Data
+	
