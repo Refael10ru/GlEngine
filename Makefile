@@ -66,9 +66,17 @@ $(BIN)/$(EXECUTABLE) : $(ALLOBJECTS)
 headers: $(HEADERS)
 	$(CXX) $(HEADERS) $(CXX_FLAG)
 
-all:
+run:
 	$(BIN)/$(EXECUTABLE)
 clean:
 	$(CLEAN_COMMAND)
 clear:
 	$(CLEAN_COMMAND)
+
+rebuild:
+	make clean
+	make
+
+debug:
+	gdb bin/*
+
