@@ -27,44 +27,51 @@ namespace GLEngine
 		void Close();	//	Closes the current window instance 
 		void ProcessInput(); //	Processes input events
 
+		Window();
+		Window(String);
+		Window(String, Color);
+		Window(String, Point2D, Color);
+		Window(Point2D, Color);
 
-		Window() : /*ID(WindowStack.size()),*/ Title(DefaultStringValues[(int)DefaultStringType::WindowTitleStrings]), Resolution(DefaultResolutions[(int)DefaultResolutionType::DefaultWindow]), GLWindow(glfwCreateWindow(this->Resolution.X, this->Resolution.Y, this->Title, NULL, NULL)), BackgroundColor(Color(0, 0, 0, 0))
-		{
-			this->ID = AllocatedWindows.size(); 
+		~Window();
 
-			if (this->GLWindow == nullptr)	//	Error check
-			{
-				std::cout << "\n Could not create the window. "; 
+		// Window() : /*ID(WindowStack.size()),*/ Title(DefaultStringValues[(int)DefaultStringType::WindowTitleStrings]), Resolution(DefaultResolutions[(int)DefaultResolutionType::DefaultWindow]), GLWindow(glfwCreateWindow(this->Resolution.X, this->Resolution.Y, this->Title, NULL, NULL)), BackgroundColor(Color(0, 0, 0, 0))
+		// {
+		// 	this->ID = AllocatedWindows.size(); 
+
+		// 	if (this->GLWindow == nullptr)	//	Error check
+		// 	{
+		// 		std::cout << "\n Could not create the window. "; 
 				
-				glfwTerminate(); 
-			}	
+		// 		glfwTerminate(); 
+		// 	}	
 		
-			glViewport(0, 0, this->Resolution.X, this->Resolution.Y); 	
-		}
+		// 	glViewport(0, 0, this->Resolution.X, this->Resolution.Y); 	
+		// }
 
-		Window(String title) : Title (title), Resolution(DefaultResolutions[(int)DefaultResolutionType::DefaultWindow]), GLWindow(glfwCreateWindow(this->Resolution.X, this->Resolution.Y, this->Title, NULL, NULL)), BackgroundColor(Color(0, 0, 0, 0))
-		{
-		}
+		// Window(String title) : Title (title), Resolution(DefaultResolutions[(int)DefaultResolutionType::DefaultWindow]), GLWindow(glfwCreateWindow(this->Resolution.X, this->Resolution.Y, this->Title, NULL, NULL)), BackgroundColor(Color(0, 0, 0, 0))
+		// {
+		// }
 
-		Window(String title, Color color) : Title (title), Resolution(DefaultResolutions[(int)DefaultResolutionType::DefaultWindow]), GLWindow(glfwCreateWindow(this->Resolution.X, this->Resolution.Y, this->Title, NULL, NULL)), BackgroundColor(Color((float)color.R, (float)color.G, (float)color.B, (float)color.A))
-		{
-		}
+		// Window(String title, Color color) : Title (title), Resolution(DefaultResolutions[(int)DefaultResolutionType::DefaultWindow]), GLWindow(glfwCreateWindow(this->Resolution.X, this->Resolution.Y, this->Title, NULL, NULL)), BackgroundColor(Color((float)color.R, (float)color.G, (float)color.B, (float)color.A))
+		// {
+		// }
 
-		Window(String title, Point2D resolution, Color color = Color(0, 0, 0, 0)) : Title(title), Resolution(resolution), GLWindow(glfwCreateWindow(resolution.X, resolution.Y, this->Title, NULL, NULL)), BackgroundColor(Color(0, 0, 0, 0))
-		{
-		}
+		// Window(String title, Point2D resolution, Color color = Color(0, 0, 0, 0)) : Title(title), Resolution(resolution), GLWindow(glfwCreateWindow(resolution.X, resolution.Y, this->Title, NULL, NULL)), BackgroundColor(Color(0, 0, 0, 0))
+		// {
+		// }
 		
-		Window(Point2D resolution, Color color) : Title(DefaultStringValues[(int)DefaultStringType::WindowTitleStrings]), Resolution(resolution), GLWindow(glfwCreateWindow(resolution.X, resolution.Y, this->Title, NULL, NULL)), BackgroundColor(Color(0, 0, 0, 0))
-		{
-		}
+		// Window(Point2D resolution, Color color) : Title(DefaultStringValues[(int)DefaultStringType::WindowTitleStrings]), Resolution(resolution), GLWindow(glfwCreateWindow(resolution.X, resolution.Y, this->Title, NULL, NULL)), BackgroundColor(Color(0, 0, 0, 0))
+		// {
+		// }
 
-		~Window()
-		{
-			std::cout << "Window " << this->GLWindow << " deallocated. "; 
-		}
+		// ~Window()
+		// {
+		// 	std::cout << "Window " << this->GLWindow << " deallocated. "; 
+		// }
 	};	
 
-	std::vector<Window> AllocatedWindows;
+	extern std::vector<Window*> AllocatedWindows;	//	Stores all the window instances allocated at runtime
 
 	// std::vector<Window*> WindowStack = std::vector<Window*>();
 }

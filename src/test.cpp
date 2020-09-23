@@ -22,16 +22,7 @@ int main()
 		return -1; 
 	}
 
-
 	Window window = Window("GLEngine App", Color(1, 0.5, 0.6, 1));
-	// if (window.GLWindow == nullptr)
-	// 	glfwTerminate(); 	
-	
-
-
-//	Mesh mesh; // = Mesh();
-
-	// Debug->Log("Mesh created");		
 
 	glfwMakeContextCurrent(window.GLWindow); 
 	
