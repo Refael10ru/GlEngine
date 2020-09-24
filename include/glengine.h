@@ -9,12 +9,18 @@
 #include <vector>	
 #include "shader.h"
 #include "tools.h"
-#include "Debug.h"
+#include "window.h"
+#include "globjects.h"
+#include "globals.h"
 
 using namespace DebugTools; 
 
 namespace GLEngine
-{   
+{   	
+	extern void SetWindowHints(unsigned int, unsigned int);	//	Sets up the OpenGL version hint
+	extern bool SetupGLEW();	//	Sets up the GLEW library
+	extern bool SetupGLFW();	//	Sets up the GLFW library
+
 	class VertexArrayObject
 	{
 	public:
@@ -40,15 +46,9 @@ namespace GLEngine
 		{
 			unsigned int VBO;
 
-			Debug->Log("VAO default contructor called."); 
-
 			glGenBuffers(1, &VBO);
 
-			Debug->Log("VBO generated."); 
-
 			this->VertexBufferObjects.push_back(VBO); 
-		
-			Debug->Log(VBO);
 		}
 
 		VertexArrayObject(int bufferCount) : VertexBufferObjects(std::vector<unsigned int>())
@@ -71,16 +71,6 @@ namespace GLEngine
 			this->SetBufferData(VBO, General::VectorToArray<Vertex3Df>(vertexData), vertexData.size()); 	
 			this->SetVertexAttributePointer(this->VertexBufferObjects.at(this->VertexBufferObjects.size() - 1));
 		}
-
-		// VertexArrayObject(std::vector<>)
-		// {
-
-		// }
-
-		// VertexArrayObject() : VertexBufferObjects(std::vector<unsigned int>())
-		// {
-
-		// }
 	}; 
 
 	class Mesh 	//	3D/2D meshes
@@ -98,22 +88,34 @@ namespace GLEngine
 
 		void SetVAO();	//	Sets the Vertex Array Object
 
-		Mesh() : VertexMatrixVector(std::vector<Vertex3Df>()), VertexMatrixArray(new float[1000]), MatrixSize(0) 
+		Mesh() : VertexMatrixVector(std::vector<Vertex3Df>()), VertexMatrixArray(new float[1000]), MatrixSize(0), MeshShader(Shader()) 
 		{
 		}
 		
-		Mesh(Vertex3Df* vertexMatrix, int size) : VertexMatrixVector(std::vector<Vertex3Df>()), VertexMatrixArray(General::PointArrayToFloatArray(vertexMatrix, size)) 
+		Mesh(Vertex3Df* vertexMatrix, int size) : VertexMatrixVector(std::vector<Vertex3Df>()), VertexMatrixArray(General::PointArrayToFloatArray(vertexMatrix, size)), MeshShader(Shader())
 		{
 		}
 
-		Mesh(std::vector<Vertex3Df> vertexMatrixVector) : VertexMatrixVector(vertexMatrixVector),  VertexMatrixArray(General::VertexVectorToFloatArray(vertexMatrixVector)), MatrixSize(vertexMatrixVector.size() * 3)
+		Mesh(Vertex3Df* vertexMatrix, int size, Shader shader) : VertexMatrixVector(std::vector<Vertex3Df>()), VertexMatrixArray(General::PointArrayToFloatArray(vertexMatrix, size)), MeshShader(shader)
+		{
+		}	 
+
+		Mesh(std::vector<Vertex3Df> vertexMatrixVector) : VertexMatrixVector(vertexMatrixVector) //,  VertexMatrixArray(General::VertexVectorToFloatArray(vertexMatrixVector)), MatrixSize(vertexMatrixVector.size() * 3), MeshShader(Shader())
 		{	
+			// Debug->Log("Contructor called. "); 
+		}
+
+		Mesh(std::vector<Vertex3Df>	vertexMatrixVector, Shader shader) : VertexMatrixVector(vertexMatrixVector),  VertexMatrixArray(General::VertexVectorToFloatArray(vertexMatrixVector)), MatrixSize(vertexMatrixVector.size() * 3), MeshShader(shader)
+		{
+
 		}
 	};
 
 	class Renderer
 	{
-	public:
-		static void Render();
+	public:	
+		static bool IsNull(); // Null checks all required Mesh properties
+		static bool GLLoop(Window, Mesh*);	//	 Runs the OpenGL loop.
+		static void Render(Mesh*);	// Renders the provided Mesh
 	};
 }

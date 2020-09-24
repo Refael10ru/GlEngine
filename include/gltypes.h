@@ -9,4 +9,3 @@
 typedef char* String; 
 
 // GLenum* GLEnums;
- 

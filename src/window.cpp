@@ -43,6 +43,27 @@ GLEngine::Window::~Window()
 	std::cout << "Window " << this->GLWindow << " deallocated. "; 
 }
 
+GLEngine::Window::Window(bool active) : /*ID(WindowStack.size()),*/ Title(DefaultStringValues[(int)DefaultStringType::WindowTitleStrings]), Resolution(DefaultResolutions[(int)DefaultResolutionType::DefaultWindow]), GLWindow(glfwCreateWindow(this->Resolution.X, this->Resolution.Y, this->Title, NULL, NULL)), BackgroundColor(Color(0, 0, 0, 0)), ID(AllocatedWindows.size())
+{
+	AllocatedWindows.push_back(this);
+
+	if (this->GLWindow == nullptr)	//	Error check
+	{
+		std::cout << "\n Could not create the window. "; 
+				
+		glfwTerminate(); 
+	}	
+		
+	glViewport(0, 0, this->Resolution.X, this->Resolution.Y);
+
+	if (active)
+	{
+		glfwMakeContextCurrent(this->GLWindow); 
+
+		glfwSetFramebufferSizeCallback(this->GLWindow, Window::FrameBufferSizeCallBack); 
+	}
+}
+
 void GLEngine::Window::FrameBufferSizeCallBack(GLFWwindow* window, int height, int width)
 {
 	glViewport(0, 0, height, width); 

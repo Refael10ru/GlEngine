@@ -1,8 +1,6 @@
 #include "globjects.h"
 #include "window.h"
 
-Debugger* GLEngine::Debug = new Debugger();
-
 String* GLEngine::DefaultStringValues = new String[1] {
 	"New Window"
 }; 

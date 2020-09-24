@@ -4,4 +4,3 @@
 
 #include "globjects.h"
 #include "window.h"
-

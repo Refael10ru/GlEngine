@@ -8,16 +8,12 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h> 
 #include "gltypes.h"
-// #include "globjects.h"
 #include "Debug.h"
 
 using namespace DebugTools;
-	// = new Debugger(); 
 
 namespace GLEngine
-{
-	extern Debugger* Debug;
-	
+{	
 	struct Point2D
 	{	
 		int X, Y; 
