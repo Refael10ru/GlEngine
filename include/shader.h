@@ -3,6 +3,7 @@
 #define SHADER_H
 
 #include "globjects.h"
+#include "globals.h"
 
 namespace GLEngine
 {	
@@ -15,7 +16,7 @@ namespace GLEngine
 		{
 			VertexShader, 
 			FragmentShader
-		}; 
+		};
 		
 		unsigned int ShaderProgramID; // Stores the final compiled shader program ID
 
@@ -25,8 +26,9 @@ namespace GLEngine
 
 		bool Verify();	// Checks if the current instance of the Shader is eligible to get compiled and linked to the final shader program
 		void CheckErrors(unsigned int, GLenum); // Checks for compiling and linking errors
-		unsigned int* Compile();	// Compiles all the shaders at once if eligible
-		unsigned int Link(); // Links the compiled shaders into one shader program						
+		
+		unsigned int* Compile();	//	Compiles all the shaders at once if eligible
+		unsigned int Link();	//	Links the compiled shaders into one shader program						
 
 		Shader()
 		{	
@@ -41,21 +43,29 @@ namespace GLEngine
 			};
 		}
 
-		Shader(String vertexShaderString, String fragmentShaderString) : ShaderProgramStrings({ vertexShaderString, fragmentShaderString })
+		Shader(String vertexShaderString, String fragmentShaderString) : ShaderProgramStrings({ new char[1000], new char[1000] })	//	
 		{
+			strcpy(this->ShaderProgramStrings.at(0), vertexShaderString); 
+			strcpy(this->ShaderProgramStrings.at(1), fragmentShaderString); 
+
+			for (int x = 0; x < 2; x++)
+				Debug->Log(this->ShaderProgramStrings.at(0)); 
+
 			this->ShaderIDs = new unsigned int[2] {
-				glCreateShader(ShaderTypeGLenums[0]), 
-				glCreateShader(ShaderTypeGLenums[1])
+				glCreateShader(GL_VERTEX_SHADER), 
+				glCreateShader(GL_FRAGMENT_SHADER)
 			};
+
+			Debug->Log("Shader construction sucessfull.");
 		}
 		
 		Shader(std::vector<String> shaderStrings) : ShaderProgramStrings(shaderStrings)
-		{	
+		{
 		}
 
 		Shader(std::vector<String> shaderStrings, bool compile) : ShaderProgramStrings(shaderStrings) 
 		{
-			this->Compile(); 	
+			this->Compile();
 			this->Link();
 		}
 	}; 

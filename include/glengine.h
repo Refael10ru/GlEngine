@@ -35,40 +35,28 @@ namespace GLEngine
 		
 		std::vector<unsigned int> VertexBufferObjects;	
 		
-		void CreateBufferObject();	//	Creates a specified number of VertexBuffers 
+		void CreateBufferObject();	//	Creates a VertexBuffers
+		void CreateBufferObject(int);	//	Creates a specified number of VertexBuffers 
 		void SetVertexAttributePointer(unsigned int);	//	Sets the Vertex Attribute pointer for depending up 
 		void SetVertexAttributePointer(unsigned int, unsigned int);	//	Sets the Vertex Attribute pointer for depending up 
-		void Bind(VertexArrayObject::ObjectType, unsigned int);	//	Binds a specified VB	O
+		void Bind(VertexArrayObject::ObjectType, unsigned int);	//	Binds a specified VBO
 		void SetBufferData(unsigned int);	// Set main data.
-		void SetBufferData(unsigned int, Vertex3Df*, int);	//	Sets the main data
+		void SetBufferData(unsigned int, float*, unsigned int);	//	Sets the main data
 
-		VertexArrayObject() : VertexBufferObjects(std::vector<unsigned int>())
+		VertexArrayObject() : VertexBufferObjects(std::vector<unsigned int>()), VertexArrayObjectID(-1), VertexAttributePointer(nullptr)
 		{
-			unsigned int VBO;
-
-			glGenBuffers(1, &VBO);
-
-			this->VertexBufferObjects.push_back(VBO); 
+			this->CreateBufferObject(); 
 		}
 
-		VertexArrayObject(int bufferCount) : VertexBufferObjects(std::vector<unsigned int>())
-		{
-			unsigned int VBO;
-
-			glGenBuffers(bufferCount, &VBO);
-
-			this->VertexBufferObjects.push_back(VBO); 
+		VertexArrayObject(int bufferCount) : VertexBufferObjects(std::vector<unsigned int>()), VertexArrayObjectID(-1), VertexAttributePointer(nullptr)
+		{			
+			this->CreateBufferObject(); 
 		}
 
 		VertexArrayObject(std::vector<Vertex3Df> vertexData) : VertexBufferObjects(std::vector<unsigned int>())
 		{
-			unsigned int VBO;
-
-			glGenBuffers(1, &VBO);
-
-			this->VertexBufferObjects.push_back(VBO);
-			
-			this->SetBufferData(VBO, General::VectorToArray<Vertex3Df>(vertexData), vertexData.size()); 	
+			this->CreateBufferObject(); 
+			this->SetBufferData(this->VertexBufferObjects.at(this->VertexBufferObjects.size() - 1), General::VertexVectorToFloatArray(vertexData), vertexData.size() * 3);	// sets the data to the VBO 	
 			this->SetVertexAttributePointer(this->VertexBufferObjects.at(this->VertexBufferObjects.size() - 1));
 		}
 	}; 
@@ -107,7 +95,6 @@ namespace GLEngine
 
 		Mesh(std::vector<Vertex3Df>	vertexMatrixVector, Shader shader) : VertexMatrixVector(vertexMatrixVector),  VertexMatrixArray(General::VertexVectorToFloatArray(vertexMatrixVector)), MatrixSize(vertexMatrixVector.size() * 3), MeshShader(shader)
 		{
-
 		}
 	};
 
@@ -115,7 +102,7 @@ namespace GLEngine
 	{
 	public:	
 		static bool IsNull(); // Null checks all required Mesh properties
-		static bool GLLoop(Window, Mesh*);	//	 Runs the OpenGL loop.
+		static bool GLLoop(Window);	//	 Runs the OpenGL loop.
 		static void Render(Mesh*);	// Renders the provided Mesh
 	};
 }

@@ -34,7 +34,7 @@ LIB_FLAG	:= -L$(LIB)
 EXECUTABLE		:= $(PROJECT)
 LIBRARIES		:= 
 PLATFORM		:= linux
-CLEAN_COMMAND 	:= -rm -r $(BIN)/* $(OBJ)/*/*
+CLEAN_COMMAND 	:= -rm -r $(BIN)/* $(OBJ)/*/* include/*.gch
 LINK_FLAGS		:= 
 
 #------link file paths pipeline------>

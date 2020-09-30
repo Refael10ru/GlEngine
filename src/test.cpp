@@ -16,21 +16,25 @@ int main()
 		
 	Window window = Window("GLEngine App", Color(1, 0.1, 0.5, 1));
 
-	new Mesh();
-
-	// Mesh mesh = Mesh({
-	// 	Vertex3Df(Point3Df(-0.5, -0.5, 0.0), Color()), 
-	// 	Vertex3Df(Point3Df(0.5, -0.5, 0.0), Color()), 
-	// 	Vertex3Df(Point3Df(0.0, 0.5, 0.0), Color())
-	// }); 
-
 	glfwMakeContextCurrent(window.GLWindow); 
-
 	glfwSetFramebufferSizeCallback(window.GLWindow, window.FrameBufferSizeCallBack); 
+	
+	std::cout << "GLEW Status: " << SetupGLEW();     
 
-	SetupGLEW();     
+	std::vector<Vertex3Df> vertexVector = {
+		Vertex3Df(Point3Df(-0.5, -0.5, 0.0), Color()),
+		Vertex3Df(Point3Df(0.5, -0.5, 0.0), Color()),
+		Vertex3Df(Point3Df(0.0, 0.5, 0.0), Color())
+	};
 
-	Renderer::GLLoop(window, new Mesh());
+	char* VertexShaderString = FileIO::Read("/home/rishit/source/repos/GLEngine/shaders/vertexshader.vs"),
+	 *FragmentShaderString = FileIO::Read("/home/rishit/source/repos/GLEngine/shaders/fragmentshader.fs"); 
+
+	Mesh* mesh = new Mesh(vertexVector, Shader(VertexShaderString, FragmentShaderString)); //, Shader(VertexShaderString, FragmentShaderString));
+
+	mesh->SetVAO();
+
+	Renderer::GLLoop(window); 
 
 	glfwTerminate();
 

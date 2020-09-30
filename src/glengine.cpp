@@ -17,15 +17,15 @@ bool GLEngine::SetupGLEW()
 	try
 	{
 		if (glewInit() != GLEW_OK)
-		{
-			std::cout << "\nGLEW  initialization error..";
-
-			return false; 
-		}
+			throw new LibraryInitializationError("GLEW");
 	}
 	catch (const LibraryInitializationError& e)
 	{	
+		std::cout << "\nGLEW  initialization error..";
+
+		return false; 
 	}
+	
 	return true;
 }
 
@@ -45,7 +45,7 @@ void GLEngine::Renderer::Render(GLEngine::Mesh* mesh)
 {	
 }
 
-bool GLEngine::Renderer::GLLoop(GLEngine::Window window, GLEngine::Mesh* mesh)
+bool GLEngine::Renderer::GLLoop(GLEngine::Window window)
 {
 	while (!glfwWindowShouldClose(window.GLWindow))
 	{
@@ -53,7 +53,7 @@ bool GLEngine::Renderer::GLLoop(GLEngine::Window window, GLEngine::Mesh* mesh)
 		glClearColor(window.BackgroundColor.R, window.BackgroundColor.G, window.BackgroundColor.B, window.BackgroundColor.A);
 		
 		window.ProcessInput();
-		GLEngine::Renderer::Render(mesh);	//	Renders the mesh  
+		// GLEngine::Renderer::Render(mesh);	//	Renders the mesh  
 
 		glfwPollEvents();
 		glfwSwapBuffers(window.GLWindow);
@@ -70,22 +70,22 @@ void GLEngine::Mesh::SetVAO()
 void GLEngine::VertexArrayObject::CreateBufferObject()
 {
 	unsigned int BufferObject;	// buffer object to be created
-	
-	glGenBuffers(GL_ARRAY_BUFFER, &BufferObject);
+
+	glGenBuffers(1, &BufferObject);
 
 	this->VertexBufferObjects.push_back(BufferObject);
 }
 
 void GLEngine::VertexArrayObject::Bind(GLEngine::VertexArrayObject::ObjectType objectType, unsigned int id)
 {
-	glBindBuffer(1, this->VertexBufferObjects.at(id));
+	glBindBuffer(GL_ARRAY_BUFFER, this->VertexBufferObjects.at(id));
 }
 
-void GLEngine::VertexArrayObject::SetBufferData(unsigned int bufferID, Vertex3Df* vertexArray, int arraySize)
+void GLEngine::VertexArrayObject::SetBufferData(unsigned int bufferID, float* vertexArray, unsigned int arraySize)
 {	
 	this->Bind(VertexArrayObject::VertexBuffer, bufferID); 	//	Binds the provided vertex buffer
 	
-	glBufferData(GL_ARRAY_BUFFER, arraySize * 3, General::VertexArrayToFloatArray(vertexArray, arraySize), GL_STATIC_DRAW);	//	Adds data to the buffer
+	glBufferData(GL_ARRAY_BUFFER, arraySize, vertexArray, GL_STATIC_DRAW);	//	Adds data to the buffer
 }
 
 void GLEngine::VertexArrayObject::SetVertexAttributePointer(unsigned int id)

@@ -25,3 +25,13 @@ void GLEngine::LibraryInitializationError::LogExceptionMessage()
 {
 	GLException::LogExceptionMessage();	//	Logs the error message 
 }
+
+void GLEngine::GLENullShaderStringsException::LogExceptionMessage()
+{
+	GLException::LogExceptionMessage();	//	Logs the error message 
+}
+
+void GLEngine::GLEUncompiledShaderException::LogExceptionMessage()
+{
+	GLException::LogExceptionMessage();	//	Logs the error message 
+}
