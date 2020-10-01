@@ -48,15 +48,27 @@ namespace GLEngine
 			strcpy(this->ShaderProgramStrings.at(0), vertexShaderString); 
 			strcpy(this->ShaderProgramStrings.at(1), fragmentShaderString); 
 
-			for (int x = 0; x < 2; x++)
-				Debug->Log(this->ShaderProgramStrings.at(0)); 
+			this->ShaderIDs = new unsigned int[2] {
+				glCreateShader(GL_VERTEX_SHADER), 
+				glCreateShader(GL_FRAGMENT_SHADER)
+			};
+		}	
+
+		Shader(String vertexShaderString, String fragmentShaderString, bool compile) : ShaderProgramStrings({ new char[1000], new char[1000] })	//	
+		{
+			strcpy(this->ShaderProgramStrings.at(0), vertexShaderString); 
+			strcpy(this->ShaderProgramStrings.at(1), fragmentShaderString); 
 
 			this->ShaderIDs = new unsigned int[2] {
 				glCreateShader(GL_VERTEX_SHADER), 
 				glCreateShader(GL_FRAGMENT_SHADER)
 			};
 
-			Debug->Log("Shader construction sucessfull.");
+			if (compile)
+			{
+				this->Compile();
+				this->Link(); 
+			}
 		}
 		
 		Shader(std::vector<String> shaderStrings) : ShaderProgramStrings(shaderStrings)
@@ -65,8 +77,11 @@ namespace GLEngine
 
 		Shader(std::vector<String> shaderStrings, bool compile) : ShaderProgramStrings(shaderStrings) 
 		{
-			this->Compile();
-			this->Link();
+			if (compile)
+			{
+				this->Compile();
+				this->Link();
+			}
 		}
 	}; 
 }	

@@ -21,14 +21,14 @@ namespace GLEngine
 		}
 		
 		template<typename T>
-		void PrintArray(T* array, unsigned int size)
+		static void PrintArray(T* array, unsigned int size)
 		{	
 			for (int x = 0; x < size; x++) 
 				std::cout << array[x];
 		}
 		
 		template<typename T>
-		void PrintArray(std::vector<T> array)
+		static void PrintArray(std::vector<T> array)
 		{	
 			for (int x = 0; x < array.size(); x++) 
 				std::cout << array.at(x);

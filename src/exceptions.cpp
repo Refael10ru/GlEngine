@@ -11,7 +11,7 @@ void GLEngine::FileNotFoundException::LogExceptionMessage()
 	GLException::LogExceptionMessage();	//	Logs the error message 
 }
 
-void GLEngine::GLInvalidTypeException::LogExceptionMessage()
+void GLEngine::GLEInvalidTypeException::LogExceptionMessage()
 {	
 	GLException::LogExceptionMessage();	//	Logs the error message 
 }

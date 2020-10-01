@@ -42,7 +42,7 @@ bool GLEngine::SetupGLFW()
 }
 
 void GLEngine::Renderer::Render(GLEngine::Mesh* mesh)	
-{	
+{		
 }
 
 bool GLEngine::Renderer::GLLoop(GLEngine::Window window)
@@ -64,7 +64,7 @@ bool GLEngine::Renderer::GLLoop(GLEngine::Window window)
 
 void GLEngine::Mesh::SetVAO()
 {
-	this->VAO = GLEngine::VertexArrayObject(); 
+	this->VAO = GLEngine::VertexArrayObject(this->VertexMatrixArray, this->MatrixSize); 
 }
 
 void GLEngine::VertexArrayObject::CreateBufferObject()
@@ -78,7 +78,30 @@ void GLEngine::VertexArrayObject::CreateBufferObject()
 
 void GLEngine::VertexArrayObject::Bind(GLEngine::VertexArrayObject::ObjectType objectType, unsigned int id)
 {
-	glBindBuffer(GL_ARRAY_BUFFER, this->VertexBufferObjects.at(id));
+	try
+	{
+		switch (objectType)
+		{
+			case VertexArrayObject::VertexBuffer: 
+				glBindBuffer(GL_ARRAY_BUFFER, id);
+				
+				break;
+
+			case VertexArrayObject::VertexArray: 
+				glBindVertexArray(id); 
+
+				break;
+
+			default:
+				throw new GLEInvalidTypeException("VertexObject"); 		
+
+				break; 
+		}
+	}
+	catch (const GLEInvalidTypeException& e)
+	{
+		Debug->Log(e.Message);	
+	}
 }
 
 void GLEngine::VertexArrayObject::SetBufferData(unsigned int bufferID, float* vertexArray, unsigned int arraySize)
@@ -90,6 +113,9 @@ void GLEngine::VertexArrayObject::SetBufferData(unsigned int bufferID, float* ve
 
 void GLEngine::VertexArrayObject::SetVertexAttributePointer(unsigned int id)
 {
+	this->Bind(VertexArrayObject::VertexArray, id); 
+
 	glVertexAttribPointer(id, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	
 	glEnableVertexAttribArray(id);
 }

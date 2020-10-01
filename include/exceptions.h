@@ -104,14 +104,19 @@ namespace GLEngine
 		}
 	};
 
-	class GLInvalidTypeException : public GLException	//	Thrown when shader class initialization is incomplete or any of its properties have invalid values
+	class GLEInvalidTypeException : public GLException	//	Thrown when shader class initialization is incomplete or any of its properties have invalid values
 	{
 	public:
 		void LogExceptionMessage() override;
 		
-		GLInvalidTypeException() 
+		GLEInvalidTypeException() 
 		{
 			this->Message = strcat(new char[100], "The provided type is invalid. ");
+		}
+
+		GLEInvalidTypeException(String objectName) 
+		{
+			this->Message = strcat(strcat(strcat(new char[100], "The provided"), objectName), " type is invalid. ");
 		}
 	};
 }

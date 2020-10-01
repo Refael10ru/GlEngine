@@ -30,9 +30,7 @@ int main()
 	char* VertexShaderString = FileIO::Read("/home/rishit/source/repos/GLEngine/shaders/vertexshader.vs"),
 	 *FragmentShaderString = FileIO::Read("/home/rishit/source/repos/GLEngine/shaders/fragmentshader.fs"); 
 
-	Mesh* mesh = new Mesh(vertexVector, Shader(VertexShaderString, FragmentShaderString)); //, Shader(VertexShaderString, FragmentShaderString));
-
-	mesh->SetVAO();
+	Mesh* mesh = new Mesh(vertexVector, Shader(VertexShaderString,FragmentShaderString, true)); 
 
 	Renderer::GLLoop(window); 
 
