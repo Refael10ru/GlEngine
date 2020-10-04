@@ -41,11 +41,15 @@ bool GLEngine::SetupGLFW()
 	return true;
 }
 
-void GLEngine::Renderer::Render(GLEngine::Mesh* mesh)	
+void GLEngine::Renderer::Render(GLEngine::Mesh* mesh)
 {		
-}
+	glUseProgram(mesh->MeshShader.ShaderProgramID);
+	// mesh->VAO.Bind(VertexArrayObject::VertexArray, 0);
+	glBindVertexArray(0); 
+	glDrawArrays(GL_TRIANGLES, 0, 3); 
+}	
 
-bool GLEngine::Renderer::GLLoop(GLEngine::Window window)
+bool GLEngine::Renderer::GLLoop(GLEngine::Window window, Mesh* mesh)
 {
 	while (!glfwWindowShouldClose(window.GLWindow))
 	{
@@ -53,10 +57,11 @@ bool GLEngine::Renderer::GLLoop(GLEngine::Window window)
 		glClearColor(window.BackgroundColor.R, window.BackgroundColor.G, window.BackgroundColor.B, window.BackgroundColor.A);
 		
 		window.ProcessInput();
-		// GLEngine::Renderer::Render(mesh);	//	Renders the mesh  
+		
+		GLEngine::Renderer::Render(mesh);	//	Renders the mesh  
 
-		glfwPollEvents();
 		glfwSwapBuffers(window.GLWindow);
+		glfwPollEvents();
 	}
 
 	return true;
@@ -106,14 +111,16 @@ void GLEngine::VertexArrayObject::Bind(GLEngine::VertexArrayObject::ObjectType o
 
 void GLEngine::VertexArrayObject::SetBufferData(unsigned int bufferID, float* vertexArray, unsigned int arraySize)
 {	
-	this->Bind(VertexArrayObject::VertexBuffer, bufferID); 	//	Binds the provided vertex buffer
-	
+	// this->Bind(VertexArrayObject::VertexBuffer, bufferID); 	//	Binds the provided vertex buffer
+	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
+
 	glBufferData(GL_ARRAY_BUFFER, arraySize, vertexArray, GL_STATIC_DRAW);	//	Adds data to the buffer
 }
 
 void GLEngine::VertexArrayObject::SetVertexAttributePointer(unsigned int id)
 {
-	this->Bind(VertexArrayObject::VertexArray, id); 
+	// this->Bind(VertexArrayObject::VertexArray, id);
+	glBindVertexArray(id); 
 
 	glVertexAttribPointer(id, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	

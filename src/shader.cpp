@@ -24,10 +24,9 @@ unsigned int* GLEngine::Shader::Compile()
 		if (!this->Verify())	//	Shader validation
 			throw new GLEngine::GLEInvalidShaderException();
 	}
-	catch(const GLEngine::GLEInvalidShaderException& e)
+	catch(GLEngine::GLEInvalidShaderException* e)
 	{
-		GLEngine::Debug->Log(e.Message);
-		
+		e->LogExceptionMessage();		
 		return nullptr;
 	}
 
@@ -70,18 +69,20 @@ void GLEngine::Shader::CheckErrors(unsigned int program, GLenum glStatus)
 	switch (glStatus)
 	{
 		case GL_COMPILE_STATUS:	
-			glGetProgramiv(program, glStatus, &success);
+			glGetShaderiv(program, glStatus, &success);
 
 			try
-			{
+	 		{
 				if (!success) 
-				{
-					glGetProgramInfoLog(ShaderProgramID, 512, NULL, GLCompilerLog);
-				}
+					glGetShaderInfoLog(ShaderProgramID, 512, NULL, GLCompilerLog);
+
+				throw new GLEngine::GLEInvalidShaderException(GLCompilerLog); 
 			}
-			catch (const GLEngine::GLEInvalidShaderException& e)
+			catch (GLEngine::GLEInvalidShaderException* e)
 			{	
-				Debug->Log(GLCompilerLog);
+				e->LogExceptionMessage(); 
+				
+				Debug->Log(GLCompilerLog); 
 			}
 
 			break;

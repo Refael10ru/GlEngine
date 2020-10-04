@@ -57,7 +57,12 @@ namespace GLEngine
 		
 		GLEInvalidShaderException() 
 		{
-			this->Message = strcat(new char[100], "The shader instance is invalid. ");
+			// this->Message = strcpy(new char[100], "The shader instance is invalid. ");
+		}
+
+		GLEInvalidShaderException(String message) 
+		{
+			this->Message = message;
 		}
 	};
 

@@ -55,21 +55,34 @@ namespace GLEngine
 
 		VertexArrayObject(float* vertexData, unsigned int size) : VertexBufferObjects(std::vector<unsigned int>())
 		{
-			glGenVertexArrays(1, &this->VertexArrayObjectID);  // Generates the VAO
-			this->Bind(VertexArray, this->VertexArrayObjectID); // Binds the VAO
-
 			Debug->Log("VertexArrayObject()");
-
-			this->CreateBufferObject();	
-			Debug->Log("Buffer object created succesfuly.");
 			
-			Debug->Log(this->VertexBufferObjects.size()); 
+			glGenVertexArrays(1, &this->VertexArrayObjectID);  // Generates the VAO
+			this->CreateBufferObject();	// Generates the VBO 
+			
+			// this->Bind(VertexArray, this->VertexArrayObjectID); // Binds the VAO
+
+			glBindVertexArray(this->VertexArrayObjectID);
+
+
+			Debug->Log("Buffer object created succesfuly.");	
+
+			Debug->Log(this->VertexBufferObjects.at(this->VertexBufferObjects.size() - 1)); 
 
 			this->SetBufferData(this->VertexBufferObjects.at(this->VertexBufferObjects.size() - 1), vertexData, size);	// sets the data to the VBO 	
 			
-			Debug->Log("Buffer data set succesfuly.");
+			Debug->Log("Buffer data set succesfully.");
+	
+			this->SetVertexAttributePointer(0); // sets Vertex Attribute pointer to id 0.
+			// this->Bind(VertexArrayObject::VertexBuffer, 0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0); 
+			// this->Bind(VertexArrayObject::VertexArray, 0);
+			glBindVertexArray(0); 
+		}
 		
-			this->SetVertexAttributePointer(0); // sets Vertex Attribute pointer to id 0. 
+		~VertexArrayObject()
+		{
+			glDeleteVertexArrays(this->VertexArrayObjectID); 		
 		}
 	}; 
 
@@ -109,13 +122,19 @@ namespace GLEngine
 			if (vertexMatrixVector.size() > 0) 
 				this->SetVAO();
 		}
+
+		~Mesh()
+		{
+			delete &this->MeshShader;
+			delete &this->VAO;
+		}
 	};
 
 	class Renderer
 	{
 	public:	
 		static bool IsNull(); // Null checks all required Mesh properties
-		static bool GLLoop(Window);	//	 Runs the OpenGL loop.
+		static bool GLLoop(Window, Mesh*);	//	 Runs the OpenGL loop.
 		static void Render(Mesh*);	// Renders the provided Mesh
 	};
 }

@@ -11,6 +11,13 @@ namespace GLEngine
 	
 	class Shader
 	{
+	private:	
+		void DeleteShaders()	//	Deletes the created shaders
+		{
+			for (int x = 0; x < 2; x++)
+				glDeleteShader(this->ShaderIDs[x]); 
+		}
+	
 	public:
 		enum ShaderType
 		{
@@ -82,6 +89,11 @@ namespace GLEngine
 				this->Compile();
 				this->Link();
 			}
+		}
+
+		~Shader()
+		{
+			this->DeleteShaders();
 		}
 	}; 
 }	
