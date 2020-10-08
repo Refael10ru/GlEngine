@@ -24,7 +24,9 @@ namespace GLEngine
 		static void PrintArray(T* array, unsigned int size)
 		{	
 			for (int x = 0; x < size; x++) 
-				std::cout << array[x];
+			{
+				std::cout << array[x] << " ";
+			}
 		}
 		
 		template<typename T>

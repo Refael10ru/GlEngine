@@ -47,7 +47,7 @@ unsigned int* GLEngine::Shader::Compile()
 }
 
 unsigned int GLEngine::Shader::Link()
-{
+{	
 	unsigned int LinkedProgram = glCreateProgram();
 
 	for (int x= 0; x < 2; x++)

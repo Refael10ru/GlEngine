@@ -3,6 +3,12 @@
 #include "glengine.h"
 #include "exceptions.h"
 
+GLenum* GLEngine::GLObjectEnums = new GLenum[1] {
+	GL_TRIANGLES
+}; 
+
+std::vector<GLEngine::GLEObject*> GLEngine::AllocatedGLEObjects = std::vector<GLEngine::GLEObject*>(); 
+
 void GLEngine::SetWindowHints(unsigned int major, unsigned int minor)
 {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
@@ -49,6 +55,14 @@ void GLEngine::Renderer::Render(GLEngine::Mesh* mesh)
 	glDrawArrays(GL_TRIANGLES, 0, 3); 
 }	
 
+void GLEngine::Renderer::Render(GLEngine::GLEObject* object)
+{		
+	glUseProgram(object->ObjectMesh->MeshShader.ShaderProgramID);
+	// mesh->VAO.Bind(VertexArrayObject::VertexArray, 0);
+	glBindVertexArray(0); 
+	glDrawArrays(GL_TRIANGLES, 0, 3); // temporary rendering type
+}	
+
 bool GLEngine::Renderer::GLLoop(GLEngine::Window window, Mesh* mesh)
 {
 	while (!glfwWindowShouldClose(window.GLWindow))
@@ -67,10 +81,28 @@ bool GLEngine::Renderer::GLLoop(GLEngine::Window window, Mesh* mesh)
 	return true;
 }
 
-void GLEngine::Mesh::SetVAO()
+bool GLEngine::Renderer::GLLoop(GLEngine::Window window, GLEObject* object)
 {
-	this->VAO = GLEngine::VertexArrayObject(this->VertexMatrixArray, this->MatrixSize); 
+	while (!glfwWindowShouldClose(window.GLWindow))
+	{
+		glClear(GL_COLOR_BUFFER_BIT);
+		glClearColor(window.BackgroundColor.R, window.BackgroundColor.G, window.BackgroundColor.B, window.BackgroundColor.A);
+		
+		window.ProcessInput();
+		
+		GLEngine::Renderer::Render(object);	//	Renders the mesh  
+
+		glfwSwapBuffers(window.GLWindow);
+		glfwPollEvents();
+	}
+
+	return true;
 }
+
+// void GLEngine::Mesh::SetVAO()
+// {
+// 	this->VAO = GLEngine::VertexArrayObject(this->VertexMatrixArray, this->MatrixSize); 
+// }
 
 void GLEngine::VertexArrayObject::CreateBufferObject()
 {
@@ -121,8 +153,30 @@ void GLEngine::VertexArrayObject::SetVertexAttributePointer(unsigned int id)
 {
 	// this->Bind(VertexArrayObject::VertexArray, id);
 	glBindVertexArray(id); 
-
 	glVertexAttribPointer(id, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	
 	glEnableVertexAttribArray(id);
+}	
+
+GLEngine::GLEObject::GLEObject() : ID(GLEngine::AllocatedGLEObjects.size()), VAO(VertexArrayObject()), MeshArray(std::vector<Mesh*>()), ObjectMesh(new Mesh())
+{
+}
+
+GLEngine::GLEObject::GLEObject(float* vertexMatrixArray) : ID(GLEngine::AllocatedGLEObjects.size()), VAO(VertexArrayObject()), MeshArray({ new Mesh(vertexMatrixArray, 9, Shader()) }), ObjectMesh(this->MeshArray.at(0))
+{
+}
+
+GLEngine::GLEObject::GLEObject(std::vector<Vertex3Df> vertexVectorArray) : ID(AllocatedGLEObjects.size()), VAO(VertexArrayObject()), MeshArray({ new Mesh(vertexVectorArray) }), ObjectMesh(this->MeshArray.at(0))
+{
+	this->VAO = VertexArrayObject(this->ObjectMesh->VertexMatrixArray, 9);
+}
+
+GLEngine::GLEObject::GLEObject(std::vector<Vertex3Df> vertexVectorArray, GLEngine::Shader shader) : ID(AllocatedGLEObjects.size()), MeshArray({ new Mesh(vertexVectorArray, shader) })//, ObjectMesh(this->MeshArray.at(0))
+{	
+	this->ObjectMesh = this->MeshArray.at(0);
+	// General::PrintVertexFloatArray(this->ObjectMesh->VertexMatrixArray, 9); s
+	this->VAO = VertexArrayObject(General::VertexVectorToFloatArray(this->ObjectMesh->VertexMatrixVector), this->ObjectMesh->VertexMatrixVector.size() * 3); 	
+}
+
+GLEngine::GLEObject::GLEObject(float* vertexVectorArray, int arraySize, GLEngine::Shader shader) : ID(AllocatedGLEObjects.size()), MeshArray({ new Mesh(vertexVectorArray, arraySize, shader) }), ObjectMesh(this->MeshArray.at(0))
+{
 }

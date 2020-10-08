@@ -1,4 +1,6 @@
 #include "window.h"
+#include "tools.h"
+#include "Debug.h"
 
 // constructors to be forward declared.
 
@@ -26,11 +28,18 @@ GLEngine::Window::Window(String title) : Title (title), Resolution(DefaultResolu
 GLEngine::Window::Window(String title, Color color) : Title (title), Resolution(DefaultResolutions[(int)DefaultResolutionType::DefaultWindow]), GLWindow(glfwCreateWindow(this->Resolution.X, this->Resolution.Y, this->Title, NULL, NULL)), BackgroundColor(Color((float)color.R, (float)color.G, (float)color.B, (float)color.A)), ID(AllocatedWindows.size())
 {
 	AllocatedWindows.push_back(this);
+
 }
 
-GLEngine::Window::Window(String title, Point2D resolution, Color color = Color(0, 0, 0, 0)) : Title(title), Resolution(resolution), GLWindow(glfwCreateWindow(resolution.X, resolution.Y, this->Title, NULL, NULL)), BackgroundColor(Color(0, 0, 0, 0)), ID(AllocatedWindows.size())
+GLEngine::Window::Window(String title, Point2D resolution, Color color = Color(0, 0, 0, 0)) : Title(title), Resolution(resolution), GLWindow(glfwCreateWindow(resolution.X, resolution.Y, this->Title, NULL, NULL)), BackgroundColor(color), ID(AllocatedWindows.size())
 {
 	AllocatedWindows.push_back(this);
+
+
+	Debug->Log(color.R); 
+	Debug->Log(color.G); 
+	Debug->Log(color.B); 
+	Debug->Log(color.A); 	
 }
 
 GLEngine::Window::Window(Point2D resolution, Color color) : Title(DefaultStringValues[(int)DefaultStringType::WindowTitleStrings]), Resolution(resolution), GLWindow(glfwCreateWindow(resolution.X, resolution.Y, this->Title, NULL, NULL)), BackgroundColor(Color(0, 0, 0, 0)), ID(AllocatedWindows.size())
