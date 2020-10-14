@@ -32,7 +32,7 @@ int main()
 
 	// Mesh* mesh = new Mesh(vertexVector, Shader(VertexShaderString, FragmentShaderString, true)); 
 
-	GLEObject* Object = new GLEObject(vertexVector, Shader(VertexShaderString, FragmentShaderString)); 
+	GLEObject* Object = new GLEObject(vertexVector, Shader(VertexShaderString, FragmentShaderString, true)); 
 	
 	Renderer::GLLoop(window, Object);	
 

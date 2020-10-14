@@ -5,7 +5,7 @@
 PROJECT     :=  GLEngine
 
 RELEASE		:= -O3
-DEBUG		:= -ggdb3 -Og -C
+DEBUG		:= -ggdb3 -Og
 
 STATIC		:= -Bstatic -static-libgcc -static-libstdc++
 DYNAMIC		:= -static-libstdc++
